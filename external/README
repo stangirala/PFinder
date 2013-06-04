@@ -1,0 +1,3 @@
+Project External Folder
+
+Currently you just need to make a symlink to the jake root library.  Everything else is inherited from Jake.
