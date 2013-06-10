@@ -5,10 +5,10 @@
  *
  *
  *******************************************************************
- * FILENAME:    foobar.h
- * AUTHOR(S):   Jason Corso (jcorso@buffalo.edu)
- * DESCRIPTION: 
- *   Classes and functions related to the foobar core functionality.
+ * FILENAME:    hist_distance.h
+ * AUTHOR(S):   Sarma Tangirala (vtangira@buffalo.edu)
+ * DESCRIPTION:
+ *   Header files for hist_distance.c
  *
  ********************************************************************
  */

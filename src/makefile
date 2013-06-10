@@ -5,7 +5,7 @@ PROJ_PATH := $(shell pwd)/..
 
 # library source files --------------------
 
-CORE_LIBFILES = foobar1.cpp 
+CORE_LIBFILES = hist_distance.cpp 
 CORE_LIB      = libPROJcore.a
 
 
