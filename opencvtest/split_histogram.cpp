@@ -28,13 +28,16 @@ int main( int argc, char** argv )
   binCount = 256;
 
   range = (float *) malloc(sizeof(float) * 2);
-
   range[0] = 0;
   range[1] = 256;
 
   cv::calcHist(&v_bgr[0], 1, 0, cv::Mat(), hist_b, 1, &binCount, (const float **)&range, true, false );
 
-  int hist_w = 512; int hist_h = 400;
+  cv::calcHist(&v_bgr[1], 1, 0, cv::Mat(), hist_g, 1, &binCount, (const float **)&range, true, false );
+
+  cv::calcHist(&v_bgr[2], 1, 0, cv::Mat(), hist_r, 1, &binCount, (const float **)&range, true, false );
+
+  int hist_w = 512; int hist_h = 512;
   int bin_w = cvRound( (double) hist_w/binCount );
 
   // Construct an image template.
@@ -44,6 +47,14 @@ int main( int argc, char** argv )
     cv::line( histImage, cv::Point( bin_w*(i-1), hist_h - cvRound(hist_b.at<float>(i-1)) ) ,
                          cv::Point( bin_w*(i), hist_h - cvRound(hist_b.at<float>(i)) ),
                                               cv::Scalar( 255, 0, 0), 2, 8, 0  );
+
+    cv::line( histImage, cv::Point( bin_w*(i-1), hist_h - cvRound(hist_g.at<float>(i-1)) ) ,
+                         cv::Point( bin_w*(i), hist_h - cvRound(hist_g.at<float>(i)) ),
+                                              cv::Scalar( 0, 255, 0), 2, 8, 0  );
+
+    cv::line( histImage, cv::Point( bin_w*(i-1), hist_h - cvRound(hist_r.at<float>(i-1)) ) ,
+                         cv::Point( bin_w*(i), hist_h - cvRound(hist_r.at<float>(i)) ),
+                                              cv::Scalar( 0, 0, 255), 2, 8, 0  );
   }
 
   cv::normalize(hist_b, hist_b, 0, histImage.rows, cv::NORM_MINMAX, -1, cv::Mat() );
