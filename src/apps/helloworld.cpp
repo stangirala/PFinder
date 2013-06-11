@@ -17,7 +17,13 @@
 
 int main (int argc, char** argv) {
 
-  DRWN_LOG_MESSAGE("hello world");
+  jake::jvVideoFrames *img;
+
+  img = new jake::jvVideoFrames();
+
+  img->load("~/test/jake/data/yoyo.avi");
+
+  hist_distance(img, img);
 
   return 0;
 }

@@ -24,14 +24,6 @@
 #include <highgui.h>
 #include <drwnBase.h>
 
+#include <jakeVideo.h>
 
-class Foobar1 {
-
-public:
-    int foo;
-
-    Foobar1();
-    ~Foobar1();
-
-    void printSelfHello();
-};
+double hist_distance(jake::jvVideoFrames *, jake::jvVideoFrames *);
