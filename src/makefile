@@ -11,7 +11,7 @@ CORE_LIB      = libPROJcore.a
 
 # application source files --------------------
 
-APPFILES = helloworld.cpp
+APPFILES = personfinder.cpp
 
 # intermediate and final build locations ------
 BIN_DIR  = $(PROJ_PATH)/_bin

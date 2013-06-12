@@ -17,13 +17,13 @@
 
 int main (int argc, char** argv) {
 
-  jake::jvVideoFrames *img;
+  std::shared_ptr<jake::jvVideo> img;
 
-  img = new jake::jvVideoFrames();
+  img.reset(new jake::jvVideoFull());
 
-  img->load("~/test/jake/data/yoyo.avi");
+  img->load("/home/vtangira/test/jake/data/yoyo.avi");
 
-  hist_distance(img, img);
+  hist_distance(img.get(), img.get());
 
   return 0;
 }

@@ -26,4 +26,4 @@
 
 #include <jakeVideo.h>
 
-double hist_distance(jake::jvVideoFrames *, jake::jvVideoFrames *);
+double hist_distance(jake::jvVideo *, jake::jvVideo *);

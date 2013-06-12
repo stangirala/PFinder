@@ -18,20 +18,26 @@
             two histograms
     \arg jvVideo Objects reprsenting the histograms to be captured.
 */
-double hist_distance(jake::jvVideoFrames *VidHist1, jake::jvVideoFrames *VidHist2) {
+double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2) {
 
   jake::jvColorHistogramProjection HistProj;
 
-  std::vector<shared_ptr<jake::jvVideoFeature>> VidFeature[2];
+  std::vector<std::shared_ptr<jake::jvVideoFeature>> VidFeature[2];
 
   //auto histitr1, histitr2;
   Matrix<float, Dynamic, Dynamic> Diff;
   double score;
 
-  HistProj.project(*((const jake::jvVideo *)VidHist1), VidFeature[0]);
-  HistProj.project(*((const jake::jvVideo *)VidHist2), VidFeature[1]);
+  printf ("Projecting first video.\n");
+  HistProj.setType(1);
+  HistProj.project(*VidHist1, VidFeature[0]);
+  printf ("Projecting first video. Done\n");
+  /*HistProj.project(*((const jake::jvVideo *)VidHist2), VidFeature[1]);
+  printf ("Projecting second video. Done")*/
 
-  cout << "Size: " << VidFeature[0].size() << " " << VidFeature[1].size() << endl;
+  cout << "Size: " << VidFeature[0].size() << endl; //<< " " << VidFeature[1].size() << endl;
+
+  //VidFeature[0][0]->print();
 
   /*Diff = new Matrix<float, 1, VidFeature[0].size() + VidFeature[1].size()>::Zero(1, VidFeature[0].size() + VideFeature[1].size());
 
