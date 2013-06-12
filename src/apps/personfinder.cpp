@@ -17,13 +17,19 @@
 
 int main (int argc, char** argv) {
 
-  std::shared_ptr<jake::jvVideo> img;
+  double score;
 
-  img.reset(new jake::jvVideoFull());
+  std::shared_ptr<jake::jvVideo> img1, img2;
 
-  img->load("/home/vtangira/test/jake/data/yoyo.avi");
+  img1.reset(new jake::jvVideoFull());
+  img2.reset(new jake::jvVideoFull());
 
-  hist_distance(img.get(), img.get());
+  img1->load("/home/vtangira/test/jake/data/wildturkey.png");
+  img2->load("/home/vtangira/test/jake/data/yoyo.avi");
+
+  score = hist_distance(img1.get(), img2.get());
+
+  printf ("Score: %e\n", score);
 
   return 0;
 }

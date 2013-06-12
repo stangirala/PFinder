@@ -24,34 +24,32 @@ double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2) {
 
   std::vector<std::shared_ptr<jake::jvVideoFeature>> VidFeature[2];
 
-  //auto histitr1, histitr2;
-  Matrix<float, Dynamic, Dynamic> Diff;
-  double score;
+  jake::jvColorHistogramFeature *hist[2];
 
-  printf ("Projecting first video.\n");
+  std::vector<jake::jvColorHistogramFeature>::iterator histitr1, histitr2;
+
+  printf ("Projecting Videos.\n");
   HistProj.setType(1);
   HistProj.project(*VidHist1, VidFeature[0]);
-  printf ("Projecting first video. Done\n");
-  /*HistProj.project(*((const jake::jvVideo *)VidHist2), VidFeature[1]);
-  printf ("Projecting second video. Done")*/
+  HistProj.project(*VidHist2, VidFeature[1]);
+  printf ("Done projecting videos.\n");
 
-  cout << "Size: " << VidFeature[0].size() << endl; //<< " " << VidFeature[1].size() << endl;
+  hist[0] = (jake::jvColorHistogramFeature *)VidFeature[0][0].get();
+  hist[1] = (jake::jvColorHistogramFeature *)VidFeature[1][0].get();
 
-  //VidFeature[0][0]->print();
+  /*cout << "Histogram Size: " << VidFeature[0].size() << " Channel Size: " << hist[0]->v.size()
+       << " 1st Bin Size: " << hist[0]->v[0].size() << endl;*/
 
-  /*Diff = new Matrix<float, 1, VidFeature[0].size() + VidFeature[1].size()>::Zero(1, VidFeature[0].size() + VideFeature[1].size());
+  MatrixXf Diff(hist[0]->v.size(), hist[0]->v[0].size());
+  for (int i = 0; i < hist[0]->v.size(); i++) {
+    for (int j = 0; j < hist[0]->v[i].size(); j++) {
 
-  i = 0;
-  for (
-        histitr1 = VidFeature[0].begin(), histitr2 = VidFeature[1].begin();
-        hisitr1 != VidFeature[0].end(), hisitr2 != VideFeature[1].end;
-        hsiitr1++; histitr2++;
-      ) {
+      Diff(i, j) = hist[0]->v[i].at(j) - hist[1]->v[i].at(j);
+      //printf ("%e\n", Diff(i, j));
+    }
+    //printf ("\n\n");
+  }
 
-          Diff(i) = (sqrt(histitr1) - sqrt(histitr2));
+  return (1 - (Diff.norm())/sqrt(2));
 
-          i++;
-  }*/
-
-  return score;
 }
