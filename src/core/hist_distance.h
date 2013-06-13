@@ -8,7 +8,7 @@
  * FILENAME:    hist_distance.h
  * AUTHOR(S):   Sarma Tangirala (vtangira@buffalo.edu)
  * DESCRIPTION:
- *   Header files for hist_distance.c
+ *   Header file for hist_distance.cpp
  *
  ********************************************************************
  */

@@ -1,3 +1,19 @@
+/*******************************************************************
+ * Project Core Library
+ * Copyright (c) 2013, Jason Corso
+ * All rights reserved.
+ *
+ *
+ *******************************************************************
+ * FILENAME:    hist_distance.cc
+ * AUTHOR(S):   Sarma Tangirala (vtangira@buffalo.edu)
+ * DESCRIPTION:
+ *   Source file, hist_distance.cpp
+ *
+ ********************************************************************
+ */
+
+
 #include <math.h>
 #include <vector>
 #include <iostream>
@@ -8,15 +24,22 @@
 #include "hist_distance.h"
 
 /** \file   hist_distance.cpp
-    \brief  Computes the distance
+    \brief  Computes a distance metric
             between two histograms.
 
 */
 
 /** \fn   long double hist_distance(hist1, hist2)
-    \brief  Computes the Hellinger difference between
-            two histograms
-    \arg jvVideo Objects reprsenting the histograms to be captured.
+    \brief  Computes the Hellinger distance between
+            two histograms.
+
+    \parm VidHist1 jake::jvVideo object pointer representing the
+                   data for histogram.
+    \parm VidHist2 jake::jvVideo object pointer representing the
+                   data for histogram.
+
+    Computes Hellinger distance as the norm of the difference of the
+    respective squared histogram values.
 */
 double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2) {
 
@@ -51,5 +74,4 @@ double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2) {
   }
 
   return (1 - (Diff.norm())/sqrt(2));
-
 }
