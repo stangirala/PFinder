@@ -49,8 +49,6 @@ double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2) {
 
   jake::jvColorHistogramFeature *hist[2];
 
-  std::vector<jake::jvColorHistogramFeature>::iterator histitr1, histitr2;
-
   Matrix<float, Dynamic, Dynamic> Diff;
 
   printf ("Projecting Videos.\n");
