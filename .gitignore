@@ -4,3 +4,4 @@
 *.out
 /_bin
 tags
+*.swp
