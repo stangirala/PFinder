@@ -5,7 +5,7 @@
  *
  *
  *******************************************************************
- * FILENAME:    hist_distance.cc
+ * FILENAME:    hist_distance.cpp
  * AUTHOR(S):   Sarma Tangirala (vtangira@buffalo.edu)
  * DESCRIPTION:
  *   Source file, hist_distance.cpp
@@ -27,7 +27,7 @@
     \brief  Computes a distance metric
             between two histograms.
 
-*/
+ */
 
 /** \fn   long double hist_distance(hist1, hist2)
     \brief  Computes the Hellinger distance between
@@ -40,7 +40,7 @@
 
     Computes Hellinger distance as the norm of the difference of the
     respective squared histogram values.
-*/
+ */
 double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2) {
 
   jake::jvColorHistogramProjection HistProj;
@@ -50,6 +50,8 @@ double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2) {
   jake::jvColorHistogramFeature *hist[2];
 
   std::vector<jake::jvColorHistogramFeature>::iterator histitr1, histitr2;
+
+  Matrix<float, Dynamic, Dynamic> Diff;
 
   printf ("Projecting Videos.\n");
   HistProj.setType(1);
@@ -63,7 +65,7 @@ double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2) {
   /*cout << "Histogram Size: " << VidFeature[0].size() << " Channel Size: " << hist[0]->v.size()
        << " 1st Bin Size: " << hist[0]->v[0].size() << endl;*/
 
-  MatrixXf Diff(hist[0]->v.size(), hist[0]->v[0].size());
+  Diff.resize(hist[0]->v.size(), hist[0]->v[0].size());
   for (int i = 0; i < hist[0]->v.size(); i++) {
     for (int j = 0; j < hist[0]->v[i].size(); j++) {
 
