@@ -49,9 +49,8 @@ void feature_vector(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) 
 
   Histogram = (jake::jvColorHistogramFeature *) VidFeature[0].get();
 
-  // Write a slicing thingy to slice histograms up.
-
   featindex = 0;
+  printf ("before normalizing\n\n");
   // For each channel
   for (i = 0; i < 3; i++) {
 
@@ -60,7 +59,9 @@ void feature_vector(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) 
     for (j = 0; j < Histogram->v[i].size(); j++) {
       sum += Histogram->v[i].at(j);
       feat(featindex + j) = Histogram->v[i].at(j);
+      cout << feat(featindex + j) << " ";
     }
+    cout << endl;
 
     // Normalize
     for (j = 0; j < Histogram->v[i].size(); j++) {

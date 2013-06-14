@@ -19,32 +19,36 @@
 int main (int argc, char** argv) {
 
   double score;
-  int i, j;
+  int j;
 
   Matrix<float, 1, Dynamic> feat;
 
-  std::shared_ptr<jake::jvVideo> img1, img2;
+  std::shared_ptr<jake::jvVideo> img1, img2, img3;
+
 
   img1.reset(new jake::jvVideoFull());
   img2.reset(new jake::jvVideoFull());
+  img3.reset(new jake::jvVideoFull());
+
 
   img1->load("/home/vtangira/test/jake/data/wildturkey.png");
   img2->load("/home/vtangira/test/jake/data/yoyo.avi");
-
   score = hist_distance(img1.get(), img2.get());
-
   printf ("Score: %e\n", score);
 
+  // Relative path does not work.
+  //img3->load("~/Desktop/person_finder_v20130513/person1.png");
+  img3->load("/home/vtangira/Desktop/person_finder_v20130513/person1.png");
   feature_vector(img1.get(), feat);
 
-  printf ("Size of feature vector is %d\n", feat.size());
+  printf ("\n\nSize of feature vector is %ld\n\n", feat.size());
 
-  for (i = 0; i < feat.rows(); i++) {
-    for (j = 0; j < feat.cols(); j++)
-      cout << feat << " ";
-    cout << endl;
+  for (j = 0; j < feat.cols(); j++) {
+    if (j % 3 == 0 && j > 0)
+      cout << endl;
+    cout << feat(0, j) << " ";
   }
-
+  cout << endl;
 
   return 0;
 }
