@@ -22,6 +22,7 @@
 #include <Eigen/Dense>
 
 #include "hist_distance.h"
+#include "utils.h"
 
 /** \file   hist_distance.cpp
     \brief  Computes a distance metric
@@ -51,11 +52,11 @@ double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2) {
 
   Matrix<float, Dynamic, Dynamic> Diff;
 
-  printf ("Projecting Videos.\n");
+  log_msg ("Projecting Videos.");
   HistProj.setType(1);
   HistProj.project(*VidHist1, VidFeature[0]);
   HistProj.project(*VidHist2, VidFeature[1]);
-  printf ("Done projecting videos.\n");
+  log_msg ("Done projecting videos.");
 
   hist[0] = (jake::jvColorHistogramFeature *)VidFeature[0][0].get();
   hist[1] = (jake::jvColorHistogramFeature *)VidFeature[1][0].get();

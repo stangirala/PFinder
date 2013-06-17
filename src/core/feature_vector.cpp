@@ -5,10 +5,10 @@
  *
  *
  *******************************************************************
- * FILENAME:    test_feature.cpp
+ * FILENAME:    sort_match.cpp
  * AUTHOR(S):   Sarma Tangirala (vtangira@buffalo.edu)
  * DESCRIPTION:
- *   Source file, test_feature.cpp
+ *   Source file, sort_match.cpp
  *
  ********************************************************************
  */
@@ -21,10 +21,11 @@
 #include <jakeVideo.h>
 #include <Eigen/Dense>
 
-#include "test_feature.h"
+#include "feature_vector.h"
+#include "utils.h"
 
-/** \file test_feature.cpp
-    \brief Extracts features from an input image. Returns a vector of features.
+/** \file sort_match.cpp
+    \brief 
 
     \arg1 jake::jvVideo Pointer to a test image whose
                         object we are tracking.
@@ -53,7 +54,7 @@ void feature_vector(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) 
   Histogram = (jake::jvColorHistogramFeature *) VidFeature[0].get();
 
   featindex = 0;
-  printf ("before normalizing\n\n");
+  log_msg ("before normalizing\n\n");
   // For each channel
   for (i = 0; i < 3; i++) {
 
