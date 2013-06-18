@@ -3,13 +3,14 @@
 #include "utils.h"
 
 
-void log_msg(char *msg) {
+//extern state_t DEBUG;
 
-  state_t DEBUG = OFF;
+void Log::log_msg(char *msg) {
+
+  //state_t DEBUG;
 
   if (DEBUG == ON) {
     printf ("LOG_MSG: %s\n", msg);
   }
 }
-
 

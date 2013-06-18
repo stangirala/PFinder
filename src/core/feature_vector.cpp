@@ -43,6 +43,10 @@ void feature_vector(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) 
   std::vector<std::shared_ptr<jake::jvVideoFeature>> VidFeature;
   jake::jvColorHistogramFeature *Histogram;
 
+  std::shared_ptr<class Log> log;
+
+  log.reset(new class Log());
+
   n = 30;
   feat.resize(1, n);
 
@@ -54,7 +58,7 @@ void feature_vector(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) 
   Histogram = (jake::jvColorHistogramFeature *) VidFeature[0].get();
 
   featindex = 0;
-  log_msg ("before normalizing\n\n");
+  log->log_msg ("before normalizing\n\n");
   // For each channel
   for (i = 0; i < 3; i++) {
 

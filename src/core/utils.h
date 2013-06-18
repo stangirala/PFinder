@@ -10,4 +10,13 @@ enum state_t {
 
 extern state_t DEBUG;
 
-void log_msg(char *msg);
+class Log {
+
+  private:
+          static state_t DEBUG;
+
+  public:
+          void log_msg(char *msg);
+          Log(state_t state) { Log::DEBUG = state; }
+          Log() { Log::DEBUG = OFF; }
+};

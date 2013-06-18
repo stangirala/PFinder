@@ -52,11 +52,16 @@ double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2) {
 
   Matrix<float, Dynamic, Dynamic> Diff;
 
-  log_msg ("Projecting Videos.");
+  std::shared_ptr<class Log> log;
+
+  log.reset(new class Log());
+
+
+  log->log_msg ("Projecting Videos.");
   HistProj.setType(1);
   HistProj.project(*VidHist1, VidFeature[0]);
   HistProj.project(*VidHist2, VidFeature[1]);
-  log_msg ("Done projecting videos.");
+  log->log_msg ("Done projecting videos.");
 
   hist[0] = (jake::jvColorHistogramFeature *)VidFeature[0][0].get();
   hist[1] = (jake::jvColorHistogramFeature *)VidFeature[1][0].get();
