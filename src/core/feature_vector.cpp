@@ -45,7 +45,7 @@ void feature_vector(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) 
 
   std::shared_ptr<class Log> log;
 
-  log.reset(new class Log());
+  log.reset(new class Log(OFF));
 
   n = 30;
   feat.resize(1, n);

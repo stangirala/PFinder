@@ -17,6 +17,6 @@ class Log {
 
   public:
           void log_msg(char *msg);
-          Log(state_t state) { Log::DEBUG = state; }
-          Log() { Log::DEBUG = OFF; }
+          Log(state_t state) { DEBUG = state; }
+          Log() { DEBUG = OFF; }
 };
