@@ -21,10 +21,11 @@
 #include <jakeVideo.h>
 #include <Eigen/Dense>
 
-#include "test_feature.h"
+#include "feature_vector.h"
+#include "utils.h"
 
 /** \file test_feature.cpp
-    \brief Extracts features from an input image. Returns a vector of features.
+    \brief
 
     \arg1 jake::jvVideo Pointer to a test image whose
                         object we are tracking.
@@ -34,13 +35,17 @@
 
  */
 
-void feature_vector(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) {
+void test_feature(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) {
 
   int n, i, j, featindex, sum;
 
   std::shared_ptr<jake::jvColorHistogramProjection> HistProj;
   std::vector<std::shared_ptr<jake::jvVideoFeature>> VidFeature;
   jake::jvColorHistogramFeature *Histogram;
+
+  std::shared_ptr<class Log> log;
+
+  log.reset(new class Log(OFF));
 
   n = 30;
   feat.resize(1, n);
@@ -53,7 +58,7 @@ void feature_vector(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) 
   Histogram = (jake::jvColorHistogramFeature *) VidFeature[0].get();
 
   featindex = 0;
-  printf ("before normalizing\n\n");
+  log->log_msg ("before normalizing\n\n");
   // For each channel
   for (i = 0; i < 3; i++) {
 

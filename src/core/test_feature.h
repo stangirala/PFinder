@@ -5,10 +5,10 @@
  *
  *
  *******************************************************************
- * FILENAME:    test_feature.h
+ * FILENAME:    sort_match.h
  * AUTHOR(S):   Sarma Tangirala (vtangira@buffalo.edu)
  * DESCRIPTION:
- *   Header file for test_feature.h
+ *   Header file for sort_match.cpp
  *
  ********************************************************************
  */
