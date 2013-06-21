@@ -26,4 +26,4 @@
 
 #include <jakeVideo.h>
 
-void feature_vector(jake::jvVideo *, Matrix<float, 1, Dynamic> &);
+void test_feature(jake::jvVideo *, Matrix<float, 1, Dynamic> &);
