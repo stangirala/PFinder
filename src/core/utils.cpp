@@ -1,4 +1,4 @@
-#include <ios>
+#include <ostream>
 #include <iostream>
 #include <string.h>
 #include <sstream> // for stringbuf
@@ -6,13 +6,12 @@
 #include "utils.h"
 
 state_t Log::DEBUG = OFF;
-std::ios *Log::stream = nullptr;
+std::ostream *Log::stream_ptr = nullptr;
 
 void Log::log_msg(char *msg) {
 
   if (DEBUG == ON) {
-    //stream << "LOG_MSG: " << msg << std::endl;
-    stream << "LOG_MSG: ";
+    *(stream_ptr) << "LOG_MSG: " << msg << std::endl;
   }
 }
 
@@ -22,11 +21,12 @@ Log::Log(state_t state, char *stream) {
     DEBUG = state;
   }
 
-  if (Log::stream != nullptr) {
+  if (stream_ptr == nullptr) {
     if (strcmp(stream, "cout") == 0) {
-      std::stringbuf *buffer = new std::stringbuf();
-      Log::stream = new std::iostream(buffer);
+      std::streambuf *buffer = std::cout.rdbuf();
+      Log::stream_ptr = new std::iostream(buffer);
     }
   }
+
 }
 

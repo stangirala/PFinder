@@ -1,4 +1,4 @@
-#include <ios>
+#include <ostream>
 
 #pragma once
 
@@ -14,7 +14,7 @@ class Log {
 
   private:
           static state_t DEBUG;
-          static std::ios *stream;
+          static std::ostream *stream_ptr;
 
   public:
           void log_msg(char *msg);
@@ -27,7 +27,7 @@ class Log {
           Log(){}
 
           ~Log() {
-            delete stream;
+            delete stream_ptr;
           }
 
 };
