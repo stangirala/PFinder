@@ -72,7 +72,7 @@ double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2) {
   strstream << "Histogram Size: " << VidFeature[0].size() << " Channel Size: " << hist[0]->v.size()
        << " 1st Bin Size: " << hist[0]->v[0].size() << endl;
   log->log_msg(strstream.str());
-  strstream.clear();
+  //strstream.clear();
 
   Diff.resize(hist[0]->v.size(), hist[0]->v[0].size());
   for (int i = 0; i < hist[0]->v.size(); i++) {

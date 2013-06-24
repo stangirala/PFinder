@@ -133,16 +133,17 @@ int main (int argc, char** argv) {
   img1->load("/home/vtangira/test/jake/data/wildturkey.png");
   img2->load("/home/vtangira/test/jake/data/yoyo.avi");
   score = hist_distance(img1.get(), img2.get());
-  printf ("Score: %e\n", score);
+  strstream << "Score:" << score << endl;
+  log->log_msg(strstream.str());
+  //printf ("Score: %e\n", score);
 
   // Relative path does not work.
   log->log_msg("Heckles0");
   test_feature(test_image.get(), feat);
-  // sno longer exists at this point, apparently.
-  std::cout << "Log Pointer " << log << std::endl;
+  // At this point log is unable to call log_msg.
+  //log->log_msg("Heckles");
+  //std::cout << "Log Pointer " << log << std::endl;
   strstream << "Size of feature vector is " << feat.size();
-  std::cout << "Log Pointer " << log << std::endl;
-  log->log_msg("Heckles");
   //log->log_msg(strstream.str());
 
   /*for (int j = 0; j < feat.cols(); j++) {

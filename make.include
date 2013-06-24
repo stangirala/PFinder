@@ -109,10 +109,10 @@ CXXTESTGEN = $(CXXTEST)/bin/cxxtestgen
 
 
 ifeq ($(strip $(PROJ_FORCE_32BIT)), 0)
-  CFLAGS = -O3 -fPIC $(PLAT_CFLAGS) $(EXTRA_CFLAGS) -Wall
+  CFLAGS = -O3 -fPIC $(PLAT_CFLAGS) $(EXTRA_CFLAGS) -Wall -g
   LFLAGS = $(PLAT_LFLAGS) $(EXTLIB) $(EXTRA_LFLAGS) -lm -lpthread
 else
-  CFLAGS = -O3 -m32 $(PLAT_CFLAGS) $(EXTRA_CFLAGS) -Wall
+  CFLAGS = -O3 -m32 $(PLAT_CFLAGS) $(EXTRA_CFLAGS) -Wall -g
   LFLAGS = -m32 $(PLAT_LFLAGS) $(EXTLIB) $(EXTRA_LFLAGS) -lm -lpthread
 endif
 

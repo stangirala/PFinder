@@ -43,22 +43,28 @@ void test_feature(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) {
   std::vector<std::shared_ptr<jake::jvVideoFeature>> VidFeature;
   jake::jvColorHistogramFeature *Histogram;
 
-  //std::shared_ptr<class Log> log;
+  std::shared_ptr<class Log> log;
 
-  //log.reset(new class Log());
+  log.reset(new class Log());
+
+  log->log_msg("Heckles test feature0");
 
   n = 30;
   feat.resize(1, n);
 
   HistProj.reset(new jake::jvColorHistogramProjection(n/3, n/3, n/3, n/3, n/3, n/3));
+  log->log_msg("Heckles test feature1");
 
   HistProj->setType(1);
+  log->log_msg("Heckles test feature2");
   HistProj->project(*InputFrame, VidFeature);
+  cout << "Done projecting" << endl;
+  log->log_msg("Heckles test feature3");
 
   Histogram = (jake::jvColorHistogramFeature *) VidFeature[0].get();
 
   featindex = 0;
-  //log->log_msg ("Before normalizing\n");
+  log->log_msg ("Before normalizing\n");
   // For each channel
   for (i = 0; i < 3; i++) {
 

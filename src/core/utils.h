@@ -1,4 +1,5 @@
 #include <ostream>
+#include <memory>
 
 #pragma once
 
@@ -13,7 +14,8 @@ class Log {
 
   private:
           static state_t DEBUG;
-          static std::ostream *stream_ptr;
+          //statuc std::ostream *stream_ptr;
+          static std::shared_ptr<std::ostream> stream_ptr;
 
   public:
           void log_msg(std::string msg);
@@ -26,7 +28,6 @@ class Log {
           Log(){}
 
           ~Log() {
-            delete stream_ptr;
           }
 
 };
