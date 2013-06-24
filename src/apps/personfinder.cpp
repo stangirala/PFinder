@@ -10,6 +10,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <memory>
+#include <ostream>
+#include <iostream>
 
 #include <drwnBase.h>
 
@@ -49,11 +51,12 @@ int main (int argc, char** argv) {
   int num_hist, fps;
   float thresh, scale;
 
-  Log *log = new Log(OFF, "cout");
+  Log *log = new Log(ON, "cout");
 
   boost::filesystem::path pathsfile, imtypes, vidtypes, testim;
 
-  log->log_msg("Person Finder before.");
+  std::stringstream strstream;
+
 
   if (argc < 5 || argc > 9) {
     printf ("Incorrect Usage. Expected \"personfinder paths_file, im_type, vid_types, test_im[, [num_hist, [thres, [scale, [fp]]]]]\n"
@@ -90,28 +93,30 @@ int main (int argc, char** argv) {
       exit(1);
     }
 
+
+
     num_hist = 10;
     thresh = 3.0;
     scale = 0.5;
     fps = 3;
 
-    if (argc <= 5) {
-      num_hist = atoi(argv[4]);
+    if (argc == 6) {
+      num_hist = atoi(argv[5]);
     }
-    if (argc <= 6) {
-      thresh = atoi(argv[5]);
-      num_hist = atoi(argv[4]);
+    else if (argc == 7) {
+      thresh = atoi(argv[6]);
+      num_hist = atoi(argv[5]);
     }
-    if (argc <= 7) {
-      scale = atoi(argv[6]);
-      thresh = atoi(argv[5]);
-      num_hist = atoi(argv[4]);
+    else if (argc == 8) {
+      scale = atoi(argv[7]);
+      thresh = atoi(argv[6]);
+      num_hist = atoi(argv[5]);
     }
-    if (argc <= 8) {
-      fps = atoi(argv[7]);
-      scale = atoi(argv[6]);
-      thresh = atoi(argv[5]);
-      num_hist = atoi(argv[4]);
+    else if (argc == 9) {
+      fps = atoi(argv[8]);
+      scale = atoi(argv[7]);
+      thresh = atoi(argv[6]);
+      num_hist = atoi(argv[5]);
     }
   }
 
@@ -122,7 +127,7 @@ int main (int argc, char** argv) {
   img2.reset(new jake::jvVideoFull());
   img3.reset(new jake::jvVideoFull());
 
-  //test_image->load(testim.native());
+  test_image->load(testim.native());
 
 
   img1->load("/home/vtangira/test/jake/data/wildturkey.png");
@@ -130,21 +135,22 @@ int main (int argc, char** argv) {
   score = hist_distance(img1.get(), img2.get());
   printf ("Score: %e\n", score);
 
-  log->log_msg("Person Finder After.");
   // Relative path does not work.
+  log->log_msg("Heckles0");
   test_feature(test_image.get(), feat);
+  // sno longer exists at this point, apparently.
+  std::cout << "Log Pointer " << log << std::endl;
+  strstream << "Size of feature vector is " << feat.size();
+  std::cout << "Log Pointer " << log << std::endl;
+  log->log_msg("Heckles");
+  //log->log_msg(strstream.str());
 
-  //printf ("\n\nSize of feature vector is %ld\n\n", feat.size());
-
-  /*for (j = 0; j < feat.cols(); j++) {
+  /*for (int j = 0; j < feat.cols(); j++) {
     if (j % 3 == 0 && j > 0)
-      cout << endl;
-    cout << feat(0, j) << " ";
+      strstream << endl;
+    strstream << feat(0, j) << " ";
   }
-  cout << endl;*/
+  log->log_msg(strstream.str());*/
 
   return 0;
 }
-
-
-

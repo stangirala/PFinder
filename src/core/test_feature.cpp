@@ -45,7 +45,7 @@ void test_feature(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) {
 
   //std::shared_ptr<class Log> log;
 
-  //log.reset(new class Log(OFF));
+  //log.reset(new class Log());
 
   n = 30;
   feat.resize(1, n);
@@ -58,7 +58,7 @@ void test_feature(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) {
   Histogram = (jake::jvColorHistogramFeature *) VidFeature[0].get();
 
   featindex = 0;
-  //log->log_msg ("before normalizing\n\n");
+  //log->log_msg ("Before normalizing\n");
   // For each channel
   for (i = 0; i < 3; i++) {
 
@@ -67,9 +67,9 @@ void test_feature(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) {
     for (j = 0; j < Histogram->v[i].size(); j++) {
       sum += Histogram->v[i].at(j);
       feat(featindex + j) = Histogram->v[i].at(j);
-      cout << feat(featindex + j) << " ";
+      //cout << feat(featindex + j) << " ";
     }
-    cout << endl;
+    //cout << endl;
 
     // Normalize
     for (j = 0; j < Histogram->v[i].size(); j++) {
@@ -78,4 +78,5 @@ void test_feature(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) {
 
     featindex += Histogram->v[i].size();
   }
+  //log->log_msg ("Done calculating test features.");
 }
