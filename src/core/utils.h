@@ -14,7 +14,6 @@ class Log {
 
   private:
           static state_t DEBUG;
-          //statuc std::ostream *stream_ptr;
           static std::shared_ptr<std::ostream> stream_ptr;
 
   public:

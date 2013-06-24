@@ -46,20 +46,20 @@ int main (int argc, char** argv) {
 
   std::shared_ptr<jake::jvVideo> img1, img2, img3, test_image;
 
-  boost::filesystem::fstream paths_file, im_type, vid_types, test_im;
+  boost::filesystem::fstream paths, im_types, vid_types, test_im;
+  boost::filesystem::path pathsfile, imtypes, vidtypes, testim;
 
   int num_hist, fps;
   float thresh, scale;
 
   Log *log = new Log(ON, "cout");
 
-  boost::filesystem::path pathsfile, imtypes, vidtypes, testim;
 
   std::stringstream strstream;
 
 
   if (argc < 5 || argc > 9) {
-    printf ("Incorrect Usage. Expected \"personfinder paths_file, im_type, vid_types, test_im[, [num_hist, [thres, [scale, [fp]]]]]\n"
+    printf ("Incorrect Usage. Expected \"personfinder paths, im_types, vid_types, test_im[, [num_hist, [thres, [scale, [fp]]]]]\n"
              "Please check the README\n");
   }
   else {
@@ -69,14 +69,14 @@ int main (int argc, char** argv) {
       cout << "paths_file argument is incorrect." << endl;
       exit(1);
     }
-    paths_file.open(pathsfile);
+    paths.open(pathsfile);
 
     imtypes = argv[2];
     if ( (!boost::filesystem::exists(imtypes)) && (!boost::filesystem::is_regular_file(imtypes)) ) {
       cout << "im_type argument is incorrect." << endl;
       exit(1);
     }
-    im_type.open(imtypes);
+    im_types.open(imtypes);
 
     vidtypes = argv[3];
     if ( (!boost::filesystem::exists(vidtypes)) && (!boost::filesystem::is_regular_file(vidtypes)) ) {
@@ -92,8 +92,6 @@ int main (int argc, char** argv) {
       cout << "test_im argument is incorrect." << endl;
       exit(1);
     }
-
-
 
     num_hist = 10;
     thresh = 3.0;
@@ -135,23 +133,21 @@ int main (int argc, char** argv) {
   score = hist_distance(img1.get(), img2.get());
   strstream << "Score:" << score << endl;
   log->log_msg(strstream.str());
-  //printf ("Score: %e\n", score);
+  strstream.str(std::string());
 
   // Relative path does not work.
-  log->log_msg("Heckles0");
   test_feature(test_image.get(), feat);
-  // At this point log is unable to call log_msg.
-  //log->log_msg("Heckles");
-  //std::cout << "Log Pointer " << log << std::endl;
-  strstream << "Size of feature vector is " << feat.size();
-  //log->log_msg(strstream.str());
+  strstream << "Size of feature vector is " << feat.size() << endl;
+  log->log_msg(strstream.str());
+  strstream.str(std::string());
 
-  /*for (int j = 0; j < feat.cols(); j++) {
+  strstream << "Feature Vector" << std::endl;
+  for (int j = 0; j < feat.cols(); j++) {
     if (j % 3 == 0 && j > 0)
       strstream << endl;
     strstream << feat(0, j) << " ";
   }
-  log->log_msg(strstream.str());*/
+  log->log_msg(strstream.str());
 
   return 0;
 }

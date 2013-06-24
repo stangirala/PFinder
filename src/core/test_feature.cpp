@@ -47,19 +47,15 @@ void test_feature(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) {
 
   log.reset(new class Log());
 
-  log->log_msg("Heckles test feature0");
 
   n = 30;
   feat.resize(1, n);
 
   HistProj.reset(new jake::jvColorHistogramProjection(n/3, n/3, n/3, n/3, n/3, n/3));
-  log->log_msg("Heckles test feature1");
 
   HistProj->setType(1);
-  log->log_msg("Heckles test feature2");
   HistProj->project(*InputFrame, VidFeature);
-  cout << "Done projecting" << endl;
-  log->log_msg("Heckles test feature3");
+  log->log_msg("Done projecting");
 
   Histogram = (jake::jvColorHistogramFeature *) VidFeature[0].get();
 
@@ -84,5 +80,5 @@ void test_feature(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) {
 
     featindex += Histogram->v[i].size();
   }
-  //log->log_msg ("Done calculating test features.");
+  log->log_msg ("Done calculating test features.");
 }
