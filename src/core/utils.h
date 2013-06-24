@@ -8,7 +8,6 @@ enum state_t {
   OFF
 };
 
-extern state_t DEBUG;
 
 class Log {
 
@@ -17,9 +16,9 @@ class Log {
           static std::ostream *stream_ptr;
 
   public:
-          void log_msg(char *msg);
+          void log_msg(std::string msg);
 
-          Log(state_t state, char *stream);
+          Log(state_t state, std::string stream);
 
           // This version when you need it.
           //Log(state_t state, ios *stream);

@@ -53,7 +53,7 @@ int main (int argc, char** argv) {
 
   boost::filesystem::path pathsfile, imtypes, vidtypes, testim;
 
-  log->log_msg("Hello, World!\n");
+  log->log_msg("Person Finder before.");
 
   if (argc < 5 || argc > 9) {
     printf ("Incorrect Usage. Expected \"personfinder paths_file, im_type, vid_types, test_im[, [num_hist, [thres, [scale, [fp]]]]]\n"
@@ -130,6 +130,7 @@ int main (int argc, char** argv) {
   score = hist_distance(img1.get(), img2.get());
   printf ("Score: %e\n", score);
 
+  log->log_msg("Person Finder After.");
   // Relative path does not work.
   test_feature(test_image.get(), feat);
 
