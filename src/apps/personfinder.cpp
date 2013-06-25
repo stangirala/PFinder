@@ -46,37 +46,36 @@ int main (int argc, char** argv) {
 
   std::shared_ptr<jake::jvVideo> img1, img2, img3, test_image;
 
-  boost::filesystem::fstream paths, im_types, vid_types, test_im;
+  std::vector<std::string> paths_to_files, image_type, image_index;
+
+  boost::filesystem::ifstream paths, im_types, vid_types, test_im;
   boost::filesystem::path pathsfile, imtypes, vidtypes, testim;
 
-  int num_hist, fps;
+  int num_hist, fps, i, j;
   float thresh, scale;
 
-  Log *log = new Log(ON, "cout");
+  Log *log = new Log(OFF, "cout");
 
 
   std::stringstream strstream;
 
-
+  // Setup the arguments.
   if (argc < 5 || argc > 9) {
     printf ("Incorrect Usage. Expected \"personfinder paths, im_types, vid_types, test_im[, [num_hist, [thres, [scale, [fp]]]]]\n"
              "Please check the README\n");
   }
   else {
-    // Setup the arguments.
     pathsfile = argv[1];
     if( (!boost::filesystem::exists(pathsfile)) && (!boost::filesystem::is_regular_file(pathsfile)) ) {
       cout << "paths_file argument is incorrect." << endl;
       exit(1);
     }
-    paths.open(pathsfile);
 
     imtypes = argv[2];
     if ( (!boost::filesystem::exists(imtypes)) && (!boost::filesystem::is_regular_file(imtypes)) ) {
       cout << "im_type argument is incorrect." << endl;
       exit(1);
     }
-    im_types.open(imtypes);
 
     vidtypes = argv[3];
     if ( (!boost::filesystem::exists(vidtypes)) && (!boost::filesystem::is_regular_file(vidtypes)) ) {
@@ -119,6 +118,41 @@ int main (int argc, char** argv) {
   }
 
 
+  // Get paths to files.
+  paths.open(pathsfile);
+  while (paths) {
+    std::string str;
+    getline(paths, str);
+    paths_to_files.push_back(str);
+
+  }
+
+  // Get image types
+  im_types.open(imtypes);
+  while (im_types) {
+    std::string str;
+    getline(im_types, str);
+    image_type.push_back(str);
+  }
+
+  cout << paths_to_files.size() << " " << image_type.size() << endl;
+
+  // Index files.
+  for (i = 0; i < paths_to_files.size(); i++) {
+    for (j = 0; j < image_type.size(); j++) {
+
+      if (boost::filesystem::exists(paths_to_files.at(i)) && boost::filesystem::is_directory(paths_to_files.at(i))) {
+
+        boost::filesystem::path temp(paths_to_files.at(i));
+        for (boost::filesystem::directory_iterator dir(temp); dir != end_itr; dir++) {
+          //if (dir->status().extension == image_type.at(j))
+            std::cout << dir->path() << std::endl;
+        }
+      }
+    }
+  }
+
+  // Test Code.
   test_image.reset(new jake::jvVideoFull());
 
   img1.reset(new jake::jvVideoFull());
@@ -142,7 +176,7 @@ int main (int argc, char** argv) {
   strstream.str(std::string());
 
   strstream << "Feature Vector" << std::endl;
-  for (int j = 0; j < feat.cols(); j++) {
+  for (j = 0; j < feat.cols(); j++) {
     if (j % 3 == 0 && j > 0)
       strstream << endl;
     strstream << feat(0, j) << " ";
