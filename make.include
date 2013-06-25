@@ -94,8 +94,13 @@ HDF5_PATH = $(JAKE_PATH)/hdf5
 HDF5_CFLAGS = -I$(JAKE_PATH)/include -I/usr/include/mpi
 HDF5_LFLAGS = -L$(JAKE_PATH)/lib -lhdf5
 BOOST_CFLAGS = -I/home/vtangira/Downloads/boost_1_53_0/
-BOOST_LFLAGS = -L/home/vtangira/Downloads/boost_1_53_0/stage/lib/ -lboost_system -lboost_filesystem
-
+# So the -L here specifies a compile time linkage. Conceptually the LD_LIBRARY_PATH will help the link time and the run time
+# setup the library paths correctly. Using LD_LIBRARY_PATH is not really a good thing. For multiple reasons ofcourse. So anyway the best thing to do is
+# to specify to the compiler via -L where your lib so objects are at link time and via -Wl,-rpath,dir at run time. The way it works is that at compile
+# time it looks for the lib and makes note of it but forgets at run time. There is a -R option out there that does an equivalent but
+# I can't really find docs for it. (I suspect it is a solaris thing?). Anyway, the waut it is does here is that -Wl specifies linker options and -rpath
+# specifies run time path. The tldp HOWTO is an awesome read.
+BOOST_LFLAGS = -L/home/vtangira/Downloads/boost_1_53_0/stage/lib/ -lboost_system -lboost_filesystem -Wl,-rpath,/home/vtangira/Downloads/boost_1_53_0/stage/lib/
 
 EXTRA_CFLAGS += $(JAKE_CFLAGS) $(DARWIN_CFLAGS) $(OPENCV_CFLAGS) $(FFMPEG_CFLAGS) $(OPENMPI_CFLAGS) $(HDF5_CFLAGS) $(BOOST_CFLAGS)
 EXTRA_LFLAGS += $(JAKE_LFLAGS) $(DARWIN_LFLAGS) $(OPENCV_LFLAGS) $(FFMPEG_LFLAGS) $(HDF5_LFLAGS) $(BOOST_LFLAGS)

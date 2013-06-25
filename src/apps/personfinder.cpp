@@ -48,8 +48,10 @@ int main (int argc, char** argv) {
 
   std::vector<std::string> paths_to_files, image_type, image_index;
 
-  boost::filesystem::ifstream paths, im_types, vid_types, test_im;
-  boost::filesystem::path pathsfile, imtypes, vidtypes, testim;
+  namespace boostfs = boost::filesystem;
+
+  boostfs::ifstream paths, im_types, vid_types, test_im;
+  boostfs::path pathsfile, imtypes, vidtypes, testim;
 
   int num_hist, fps, i, j;
   float thresh, scale;
@@ -66,7 +68,7 @@ int main (int argc, char** argv) {
   }
   else {
     pathsfile = argv[1];
-    if( (!boost::filesystem::exists(pathsfile)) && (!boost::filesystem::is_regular_file(pathsfile)) ) {
+    if( (!boostfs::exists(pathsfile)) && (!boostfs::is_regular_file(pathsfile)) ) {
       cout << "paths_file argument is incorrect." << endl;
       exit(1);
     }
@@ -135,22 +137,35 @@ int main (int argc, char** argv) {
     image_type.push_back(str);
   }
 
-  cout << paths_to_files.size() << " " << image_type.size() << endl;
+  //cout << paths_to_files.size() << " " << image_type.size() << endl;
+
+  //std::cout << "TEST: " << boostfs::is_directory(boostfs::path("~/Downloads"));
+  std::cout << "TEST: " << boostfs::is_directory(boostfs::path("/home/vtangira/Downloads")) << endl;
+  for (boostfs::directory_iterator dir(boostfs::path("/home/vtangira/Downloads")), end_itr; dir != end_itr; dir++) {
+    std::cout << dir->path() << std::endl;
+  }
 
   // Index files.
-  for (i = 0; i < paths_to_files.size(); i++) {
-    for (j = 0; j < image_type.size(); j++) {
+  /*for (i = 0; i < paths_to_files.size(); i++) {
+    //for (j = 0; j < image_type.size(); j++) {
 
-      if (boost::filesystem::exists(paths_to_files.at(i)) && boost::filesystem::is_directory(paths_to_files.at(i))) {
+      //cout << "Str: " << boostfs::path(paths_to_files.at(i)) << endl;
+      //cout << "is_dir " << is_directory(boostfs::path(paths_to_files.at(i))) << endl;
+      //cout << "exists" << boostfs::exists(boostfs::status(boostfs::path(paths_to_files.at(i)))) << endl;
+
+      if (!(boostfs::exists(boostfs::status(boostfs::path(paths_to_files.at(i))))) &&
+          !(boostfs::is_directory(boostfs::path(paths_to_files.at(i))))
+         ) {
 
         boost::filesystem::path temp(paths_to_files.at(i));
-        for (boost::filesystem::directory_iterator dir(temp); dir != end_itr; dir++) {
+        for (boostfs::directory_iterator dir(temp), end_itr; dir != end_itr; dir++) {
           //if (dir->status().extension == image_type.at(j))
-            std::cout << dir->path() << std::endl;
-        }
+            std::cout << "File: " << dir->path() << std::endl;
+        } cout << endl;
+
       }
-    }
-  }
+    //}
+  }*/
 
   // Test Code.
   test_image.reset(new jake::jvVideoFull());
