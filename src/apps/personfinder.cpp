@@ -20,7 +20,7 @@
 
 #include "hist_distance.h"
 #include "test_feature.h"
-//#include "utils.h"
+#include "utils.h"
 
 // Input order
 // Please use absolute file paths _everywhere_.
@@ -57,7 +57,7 @@ int main (int argc, char** argv) {
   int num_hist, fps, i, j;
   float thresh, scale;
 
-  // Log *log = new Log(OFF, "cout");
+  Log *log = new Log(OFF, "cout");
 
 
   std::stringstream strstream;
@@ -88,8 +88,6 @@ int main (int argc, char** argv) {
     vid_types.open(vidtypes);
 
     testim = argv[4];
-    cout << "Actual arg4 '" << argv[4] << "'" << endl;
-    cout << "testim file is: " << testim << "\n" << endl << "\n";
     if (!boost::filesystem::exists(testim)) {
       cout << "test_im argument is incorrect." << endl;
       exit(1);
@@ -127,20 +125,28 @@ int main (int argc, char** argv) {
     std::string str;
     getline(paths, str);
     str.erase(std::find_if(str.rbegin(), str.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), str.end());
-    paths_to_files.push_back(str);
+    if (str != "") {
+      paths_to_files.push_back(str);
+    }
   }
 
 
   // Get image types
+  // Change the way extensions are handled here.
   im_types.open(imtypes);
   while (im_types) {
     std::string str;
     getline(im_types, str);
     str.erase(std::find_if(str.rbegin(), str.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), str.end());
+    if (str[0] != '.') {
+      str = "." + str;
+    }
     image_type.push_back(str);
   }
 
-  //log->msg("File Paths :" << paths_to_files.size() << " File Types: " << image_type.size());
+  // Obtain vid types.
+
+  //log->log_msg("File Paths :" << paths_to_files.size() << " File Types: " << image_type.size());
 
   /* I'm leaving this in here to potray my stupidity at not testing absolute links first. I was caught up on using
    canonical ones. Also, this is another dig at how badly the Boost docs are organized. Maybe its a fault on my person
@@ -152,25 +158,21 @@ int main (int argc, char** argv) {
   }*/
 
 
+  // Index Files
   try {
-    // Index files.
-    for (i = 0; i < paths_to_files.size(); i++) {
-      for (j = 0; j < image_type.size(); j++) {
+    for ( i = 0; i < paths_to_files.size(); i++ ) {
+      for ( j = 0; j < image_type.size(); j++ ) {
 
-        if (  (boostfs::exists(boostfs::status(boostfs::canonical(paths_to_files.at(i))))) &&
-              (boostfs::is_directory(boostfs::canonical(paths_to_files.at(i))))
-           ) {
+        if (boostfs::is_directory(boostfs::canonical(paths_to_files.at(i)))) {
 
           for ( boostfs::directory_iterator dir(boostfs::path(paths_to_files.at(i))), end_itr;
                 dir != end_itr;
                 dir++
               ) {
 
-            if (dir->extension() == image_type.at(j))
+            if (dir->path().extension().string() == image_type.at(j))
               std::cout << "File: " << dir->path() << std::endl;
           }
-
-          cout << endl;
         }
       }
     }
@@ -193,13 +195,13 @@ int main (int argc, char** argv) {
   img2->load("/home/vtangira/test/jake/data/yoyo.avi");
   score = hist_distance(img1.get(), img2.get());
   strstream << "Score:" << score << endl;
-  // log->log_msg(strstream.str());
+  log->log_msg(strstream.str());
   strstream.str(std::string());
 
   // Relative path does not work.
   test_feature(test_image.get(), feat);
   strstream << "Size of feature vector is " << feat.size() << endl;
-  // log->log_msg(strstream.str());
+  log->log_msg(strstream.str());
   strstream.str(std::string());
 
   strstream << "Feature Vector" << std::endl;
@@ -208,7 +210,7 @@ int main (int argc, char** argv) {
       strstream << endl;
     strstream << feat(0, j) << " ";
   }
-  // log->log_msg(strstream.str());
+  log->log_msg(strstream.str());
 
   return 0;
 }
