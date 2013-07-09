@@ -47,7 +47,7 @@ int main (int argc, char** argv) {
 
   std::shared_ptr<jake::jvVideo> img1, img2, img3, test_image;
 
-  std::vector<std::string> paths_to_files, image_type, image_index;
+  std::vector<std::string> paths_to_files, image_type, image_index, imfiles;
 
   namespace boostfs = boost::filesystem;
 
@@ -139,7 +139,7 @@ int main (int argc, char** argv) {
     getline(im_types, str);
     str.erase(std::find_if(str.rbegin(), str.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), str.end());
     if (str[0] != '.') {
-      str = "." + str;
+      str.insert(0, ".");
     }
     image_type.push_back(str);
   }
@@ -170,8 +170,10 @@ int main (int argc, char** argv) {
                 dir++
               ) {
 
-            if (dir->path().extension().string() == image_type.at(j))
-              std::cout << "File: " << dir->path() << std::endl;
+            if (dir->path().extension().string() == image_type.at(j)) {
+              cout << "HERE: " << dir->path().string() << endl;
+              imfiles.push_back(dir->path().string());
+            }
           }
         }
       }
@@ -181,7 +183,34 @@ int main (int argc, char** argv) {
            << "Error Msg: " << e.code().message() << endl;
   }
 
-  // Test Code.
+
+  // Looking for people in images.
+
+  //sizetemp = imfiles.size(); <- imfiles : std::vector<std::string>
+  // std::vector<struct currim> imdata
+  for (i = 0; i < imfiles.size(); i++) {
+
+    //call get featyres and get a feat array and pdata.
+    // assign things to currim
+    //imdata.push_back(currim);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /****
+  * Test Code.
+  *****/
   test_image.reset(new jake::jvVideoFull());
 
   img1.reset(new jake::jvVideoFull());
