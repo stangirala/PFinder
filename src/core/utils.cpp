@@ -4,6 +4,9 @@
 #include <sstream> // for stringbuf
 #include <memory>
 
+#include <Eigen/Dense>
+#include <Eigen/Core>
+
 #include "utils.h"
 
 state_t Log::DEBUG = OFF;
@@ -39,7 +42,7 @@ Log::Log(state_t state, std::string stream) {
 // Calculate the rectangular area intesection between the two
 // rectanges represented by the Matrix objects.
 template <typename Derived>
-void rectint(const Matrix<Derived> a, const Matrix<Derived> b, Matrix<Derived> &areamat) {
+void rectint(const MatrixBase<Derived> a, const MatrixBase<Derived> b, MatrixBase<Derived> &areamat) {
 
   int i, j;
   std::vector<struct points> rect1, rect2;
@@ -98,7 +101,7 @@ void rectint(const Matrix<Derived> a, const Matrix<Derived> b, Matrix<Derived> &
 }
 
 float point::operator*(class point rhs) {
-  return abs((this->.x * rhs.x) + (this->y * rhs.y));
+  return abs((this->x * rhs.x) + (this->y * rhs.y));
 }
 
 point& point::operator+(class point rhs) {
@@ -107,8 +110,8 @@ point& point::operator+(class point rhs) {
 
   temp = new point();
 
-  temp->x = this->x + rhs->x;
-  temp->y = this->y + rhs->y;
+  temp->x = this->x + rhs.x;
+  temp->y = this->y + rhs.y;
 
   return *temp;
 }
@@ -119,10 +122,15 @@ point& point::operator-(class point rhs) {
 
   temp = new point();
 
-  temp->x = this->x - rhs->x;
-  temp->y = this->y - rhs->y;
+  temp->x = this->x - rhs.x;
+  temp->y = this->y - rhs.y;
 
-  return *temp
+  return *temp;
+}
+
+bool point::operator==(class point rhs) {
+
+  return ((this->x == rhs.x) && (this->y == rhs.y))?true:false;
 }
 
 point& point::operator=(class point rhs) {
@@ -135,22 +143,27 @@ point& point::operator=(class point rhs) {
 
     temp = new point();
 
-    temp->x = rhs->x;
-    temp->y = rhs->y;
+    temp->x = rhs.x;
+    temp->y = rhs.y;
   }
 
-  return temp;
+  return *temp;
+}
+
+void point::print (point p) {
+
+  std::cout << "(" << p.x << ", "
+            << p.y << ")" << std::endl;
 }
 
 // Check if point is inside the space of the rectangle.
 bool inRect (struct rectangle rectangle, struct point point) {
 
-  float length, breadth;
-  class point point_centre;
+  class point length, breadth, point_centre;
 
-  point_centre = point - (rectangle.points[1] - rectangle.points[3])
+  point_centre = point - (rectangle.points[1] - rectangle.points[3]);
 
-  length = rectangle.points[4] - rectangle.pointsp[3];
+  length = rectangle.points[4] - rectangle.points[3];
 
   breadth = rectangle.points[4] - rectangle.points[3];
 

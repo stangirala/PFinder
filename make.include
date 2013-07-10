@@ -101,9 +101,10 @@ BOOST_CFLAGS = -I/home/vtangira/Downloads/boost_1_53_0/
 # I can't really find docs for it. (I suspect it is a solaris thing?). Anyway, the waut it is does here is that -Wl specifies linker options and -rpath
 # specifies run time path. The tldp HOWTO is an awesome read.
 BOOST_LFLAGS = -L/home/vtangira/Downloads/boost_1_53_0/stage/lib/ -lboost_system -lboost_filesystem -Wl,-rpath,/home/vtangira/Downloads/boost_1_53_0/stage/lib/
+FFTW_LFLAGS = -lfftw3 -lm
 
 EXTRA_CFLAGS += $(JAKE_CFLAGS) $(DARWIN_CFLAGS) $(OPENCV_CFLAGS) $(FFMPEG_CFLAGS) $(OPENMPI_CFLAGS) $(HDF5_CFLAGS) $(BOOST_CFLAGS)
-EXTRA_LFLAGS += $(JAKE_LFLAGS) $(DARWIN_LFLAGS) $(OPENCV_LFLAGS) $(FFMPEG_LFLAGS) $(HDF5_LFLAGS) $(BOOST_LFLAGS)
+EXTRA_LFLAGS += $(JAKE_LFLAGS) $(DARWIN_LFLAGS) $(OPENCV_LFLAGS) $(FFMPEG_LFLAGS) $(HDF5_LFLAGS) $(BOOST_LFLAGS) $(FFTW_LFLAGS)
 
 
 # external binaries we need

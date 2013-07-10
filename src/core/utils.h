@@ -3,8 +3,12 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include <Eigen/Dense>
+#include <Eigen/Core>
+
 #pragma once
 
+using namespace::Eigen;
 
 enum state_t {
   ON,
@@ -38,17 +42,21 @@ class point {
 
   public:
           float x, y;
+
           float operator*(class point rhs);
-          point operator-(class point rhs);
-          point operator+(class point rhs);
-          point operator=(class point rhs);
+          point& operator-(class point rhs);
+          point& operator+(class point rhs);
+          point& operator=(class point rhs);
+          bool operator==(class point rhs);
+
+          void print (point p);
 
 };
 
 struct rectangle {
 
   point points[4];
-}
+};
 
 template <typename Derived>
-bool rectint (const Matrix<Derived> a, const Matrix<Derived> b, Matrix<Derived> areamat);
+bool rectint (const MatrixBase<Derived> a, const MatrixBase<Derived> b, MatrixBase<Derived> areamat);
