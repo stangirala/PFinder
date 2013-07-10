@@ -30,3 +30,17 @@ class Log {
           }
 
 };
+
+
+struct point {
+
+  float x, y;
+};
+
+struct rectangle {
+
+  struct point points[4];
+}
+
+template <typename Derived>
+void rectint (const Matrix<Derived> a, const Matrix<Derived> b, Matrix<Derived> areamat);
