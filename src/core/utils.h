@@ -1,5 +1,7 @@
 #include <ostream>
 #include <memory>
+#include <stdlib.h>
+#include <math.h>
 
 #pragma once
 
@@ -32,15 +34,21 @@ class Log {
 };
 
 
-struct point {
+class point {
 
-  float x, y;
+  public:
+          float x, y;
+          float operator*(class point rhs);
+          point operator-(class point rhs);
+          point operator+(class point rhs);
+          point operator=(class point rhs);
+
 };
 
 struct rectangle {
 
-  struct point points[4];
+  point points[4];
 }
 
 template <typename Derived>
-void rectint (const Matrix<Derived> a, const Matrix<Derived> b, Matrix<Derived> areamat);
+bool rectint (const Matrix<Derived> a, const Matrix<Derived> b, Matrix<Derived> areamat);
