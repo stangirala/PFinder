@@ -47,6 +47,7 @@ class point {
           point& operator-(class point rhs);
           point& operator+(class point rhs);
           point& operator=(class point rhs);
+          point& operator/(double rhs);
           bool operator==(class point rhs);
 
           void print (point p);
@@ -57,6 +58,8 @@ struct rectangle {
 
   point points[4];
 };
+
+bool inRect(struct rectangle rectangle, class point point);
 
 template <typename Derived>
 bool rectint (const MatrixBase<Derived> a, const MatrixBase<Derived> b, MatrixBase<Derived> areamat);

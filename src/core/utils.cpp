@@ -128,6 +128,18 @@ point& point::operator-(class point rhs) {
   return *temp;
 }
 
+point& point::operator/(double rhs) {
+
+  point *temp;
+
+  temp = new point();
+
+  temp->x = this->x / rhs;
+  temp->y = this->y / rhs;
+
+  return *temp;
+}
+
 bool point::operator==(class point rhs) {
 
   return ((this->x == rhs.x) && (this->y == rhs.y))?true:false;
@@ -157,11 +169,17 @@ void point::print (point p) {
 }
 
 // Check if point is inside the space of the rectangle.
-bool inRect (struct rectangle rectangle, struct point point) {
+bool inRect (struct rectangle rectangle, class point point) {
 
   class point length, breadth, point_centre;
 
-  point_centre = point - (rectangle.points[1] - rectangle.points[3]);
+  point_centre = point - ((rectangle.points[3] - rectangle.points[1]) / 2);
+
+  point.print(point);
+  rectangle.points[1].print(rectangle.points[1]);
+  rectangle.points[3].print(rectangle.points[3]);
+
+  std::cout << "Centre is "; point_centre.print(point_centre);
 
   length = rectangle.points[4] - rectangle.points[3];
 
