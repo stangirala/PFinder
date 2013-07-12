@@ -32,8 +32,8 @@ int main() {
   rectangle.points[0].y = 3;
 
   class point point;
-  point.x = 1;
-  point.y = 1;
+  point.x = 10;
+  point.y = 15;
 
   inRect(rectangle, point)?cout<<"rect yes\n":cout<<"rect no\n";
 

@@ -168,10 +168,48 @@ void point::print (point p) {
             << p.y << ")" << std::endl;
 }
 
+
+void swap(struct points &a, struct points &b) {
+
+  struct points temp;
+
+  temp.x = a.x; temp.y = a.y;
+  a.x = b.x; a.y = b.y;
+  b.x = temp.x; b.y = temp.y;
+}
+
+void sort_points(class rectangle &rectangle) {
+
+  int i, j, count;
+
+  count = 4;
+
+  // Use your favourite sorting technique here.
+  // I am using Bubble Sort.
+
+  for (i = 0; i < (count - 1); i++) {
+    for (j = i + 1; j < count; j++) {
+      if (rectangle.points[i].x > rectangle.points[j].x)
+        swap(rectangle.points[i], rectangle.points[j]);
+    }
+  }
+
+  for (i = 0; i < (count - 1); i++) {
+    for (j = i + 1; j < count; j++) {
+      if (points[i].y > points[j].y && points[i].x >= points[i].x)
+        swap(points[i], points[j]);
+    }
+  }
+
+  return 0;
+}
+
 // Check if point is inside the space of the rectangle.
 bool inRect (struct rectangle rectangle, class point point) {
 
   class point length, breadth, point_centre;
+
+  sort_points(struct rectange)
 
   point_centre = point - ((rectangle.points[3] - rectangle.points[1]) / 2);
 

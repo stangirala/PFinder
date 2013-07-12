@@ -54,10 +54,15 @@ class point {
 
 };
 
-struct rectangle {
+class rectangle {
 
-  point points[4];
+  public:
+    point points[4];
+
+    void sort_points();
 };
+
+void sort_points(class rectangle &rectangle);
 
 bool inRect(struct rectangle rectangle, class point point);
 
