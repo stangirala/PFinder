@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream> // for stringbuf
 #include <memory>
+#include <cmath>
 
 #include <Eigen/Dense>
 #include <Eigen/Core>
@@ -101,7 +102,7 @@ void rectint(const MatrixBase<Derived> a, const MatrixBase<Derived> b, MatrixBas
 }
 
 float point::operator*(class point rhs) {
-  return abs((this->x * rhs.x) + (this->y * rhs.y));
+  return (this->x * rhs.x) + (this->y * rhs.y);
 }
 
 point& point::operator+(class point rhs) {
@@ -145,21 +146,24 @@ bool point::operator==(class point rhs) {
   return ((this->x == rhs.x) && (this->y == rhs.y))?true:false;
 }
 
-point& point::operator=(class point rhs) {
+void point::operator=(class point rhs) {
 
-  point *temp;
+  if (this != &rhs) {
 
-  if (*this == rhs)
-    temp = this;
-  else {
-
-    temp = new point();
-
-    temp->x = rhs.x;
-    temp->y = rhs.y;
+    this->x = rhs.x;
+    this->y = rhs.y;
   }
+}
 
-  return *temp;
+bool point::operator!=(class point rhs) {
+
+  bool result;
+
+  if ((this->x == rhs.x) || (this->y == rhs.y))
+    result = true;
+  else  result = false;
+
+  return result;
 }
 
 void point::print (point p) {
@@ -169,9 +173,9 @@ void point::print (point p) {
 }
 
 
-void swap(struct points &a, struct points &b) {
+void swap(point &a, point &b) {
 
-  struct points temp;
+  point temp;
 
   temp.x = a.x; temp.y = a.y;
   a.x = b.x; a.y = b.y;
@@ -196,38 +200,55 @@ void sort_points(class rectangle &rectangle) {
 
   for (i = 0; i < (count - 1); i++) {
     for (j = i + 1; j < count; j++) {
-      if (points[i].y > points[j].y && points[i].x >= points[i].x)
-        swap(points[i], points[j]);
+      if (
+            rectangle.points[i].y > rectangle.points[j].y &&
+            rectangle.points[i].x >= rectangle.points[i].x
+         )
+        swap(rectangle.points[i], rectangle.points[j]);
     }
   }
-
-  return 0;
 }
 
 // Check if point is inside the space of the rectangle.
-bool inRect (struct rectangle rectangle, class point point) {
+bool inRect (rectangle rectangle, point point) {
 
-  class point length, breadth, point_centre;
+  class point length, breadth, point_centre, temp;
+  bool result;
 
-  sort_points(struct rectange)
 
-  point_centre = point - ((rectangle.points[3] - rectangle.points[1]) / 2);
+  temp = point;
+  point.x = fabs(point.x); temp.y = fabs(point.y);
 
-  point.print(point);
-  rectangle.points[1].print(rectangle.points[1]);
-  rectangle.points[3].print(rectangle.points[3]);
+  sort_points(rectangle);
 
-  std::cout << "Centre is "; point_centre.print(point_centre);
+  std::cout << "Rectangle" << std::endl;
+  point.print(rectangle.points[0]);
+  point.print(rectangle.points[1]);
+  point.print(rectangle.points[2]);
+  point.print(rectangle.points[3]);
+  std::cout << std::endl << std::endl;
 
-  length = rectangle.points[4] - rectangle.points[3];
+  std::cout << "Abs Point is - ";point.print(point);std::cout<<std::endl;
+  std::cout << "Point is - ";point.print(temp);std::cout<<std::endl;
 
-  breadth = rectangle.points[4] - rectangle.points[3];
+  point_centre = point - ((rectangle.points[2] - rectangle.points[0]) / 2);
+  std::cout << "Point Centre is "; point.print(point_centre);
+
+  length = rectangle.points[1] - rectangle.points[0];
+
+  breadth = rectangle.points[2] - rectangle.points[1];
+
+  std::cout << "l: ";point.print(length); std::cout << std::endl;
+  std::cout << "b: ";point.print(breadth); std::cout << std::endl;
 
   if (
-      ((point_centre - length) * length <= 0) && ((point_centre + length) * length >= 0) &&
-      ((point_centre - breadth) * breadth <= 0) && ((point_centre + breadth) * breadth >= 0)
-     ) return true;
-  else return false;
+      ((point_centre - length) * length < 0) && ((point_centre + length) * length >= 0) &&
+      ((point_centre - breadth) * breadth < 0) && ((point_centre + breadth) * breadth >= 0)
+     ) result = true;
+  else result = false;
 
+  if (!(temp.x == point.x && temp.y == point.y))
+    result = !result;
+
+  return result;
 }
-

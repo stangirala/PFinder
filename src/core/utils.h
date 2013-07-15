@@ -46,11 +46,12 @@ class point {
           float operator*(class point rhs);
           point& operator-(class point rhs);
           point& operator+(class point rhs);
-          point& operator=(class point rhs);
+          void operator=(class point rhs);
           point& operator/(double rhs);
           bool operator==(class point rhs);
+          bool operator!=(class point rhs);
 
-          void print (point p);
+          static void print (point p);
 
 };
 
