@@ -44,6 +44,7 @@ class point {
           float x, y;
 
           float operator*(class point rhs);
+          point& operator*(int num);
           point& operator-(class point rhs);
           point& operator+(class point rhs);
           void operator=(class point rhs);

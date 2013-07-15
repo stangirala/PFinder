@@ -105,6 +105,14 @@ float point::operator*(class point rhs) {
   return (this->x * rhs.x) + (this->y * rhs.y);
 }
 
+point& point::operator*(int num) {
+
+  this->x *= num;
+  this->y *= num;
+
+  return *this;
+}
+
 point& point::operator+(class point rhs) {
 
   point *temp;
@@ -212,43 +220,26 @@ void sort_points(class rectangle &rectangle) {
 // Check if point is inside the space of the rectangle.
 bool inRect (rectangle rectangle, point point) {
 
-  class point length, breadth, point_centre, temp;
+  class point length, breadth, point_centre;
   bool result;
 
 
-  temp = point;
-  point.x = fabs(point.x); temp.y = fabs(point.y);
-
   sort_points(rectangle);
 
-  std::cout << "Rectangle" << std::endl;
-  point.print(rectangle.points[0]);
-  point.print(rectangle.points[1]);
-  point.print(rectangle.points[2]);
-  point.print(rectangle.points[3]);
-  std::cout << std::endl << std::endl;
-
-  std::cout << "Abs Point is - ";point.print(point);std::cout<<std::endl;
-  std::cout << "Point is - ";point.print(temp);std::cout<<std::endl;
-
-  point_centre = point - ((rectangle.points[2] - rectangle.points[0]) / 2);
-  std::cout << "Point Centre is "; point.print(point_centre);
+  if (point.x <= 0 && point.y <= 0)
+    point_centre = ((rectangle.points[2] - rectangle.points[0])) - point*2;
+  else
+    point_centre = point*2 - ((rectangle.points[2] - rectangle.points[0]));
 
   length = rectangle.points[1] - rectangle.points[0];
 
   breadth = rectangle.points[2] - rectangle.points[1];
-
-  std::cout << "l: ";point.print(length); std::cout << std::endl;
-  std::cout << "b: ";point.print(breadth); std::cout << std::endl;
 
   if (
       ((point_centre - length) * length < 0) && ((point_centre + length) * length >= 0) &&
       ((point_centre - breadth) * breadth < 0) && ((point_centre + breadth) * breadth >= 0)
      ) result = true;
   else result = false;
-
-  if (!(temp.x == point.x && temp.y == point.y))
-    result = !result;
 
   return result;
 }

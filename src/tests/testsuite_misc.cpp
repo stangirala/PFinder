@@ -10,7 +10,7 @@ using namespace std;
 
 int main() {
 
-  class point a, b, c;
+  class point a, b, c, point;
 
   a.x = 2; a.y = 4;
   b.x = 1; b.y = 2;
@@ -37,33 +37,58 @@ int main() {
   rectangle.points[0].x = 0;
   rectangle.points[0].y = 3;
 
+  cout << "Rectangle is" << endl;
+  point.print(rectangle.points[0]);
+  point.print(rectangle.points[1]);
+  point.print(rectangle.points[2]);
+  point.print(rectangle.points[3]);
+  cout << endl;
 
-  class point point;
-  /*point.x = 1;
+
+  cout << "inRect Tests" << endl;
+
+  point.x = 1;
   point.y = 1.5;
+  point.print(point);
 
-  inRect(rectangle, point)?cout<<"yes\n":cout<<"no\n";
+  inRect(rectangle, point)?cout<<"yes\n\n":cout<<"no\n\n";
+
+  point.x = 3;
+  point.y = 3;
+  point.print(point);
+
+  inRect(rectangle, point)?cout<<"yes\n\n":cout<<"no\n\n";
 
   point.x = 15;
   point.y = 12;
+  point.print(point);
 
-  inRect(rectangle, point)?cout<<"yes\n":cout<<"no\n";
+  inRect(rectangle, point)?cout<<"yes\n\n":cout<<"no\n\n";
 
 
   point.x = 1;
   point.y = 0;
+  point.print(point);
 
-  inRect(rectangle, point)?cout<<"yes\n":cout<<"no\n";*/
+  inRect(rectangle, point)?cout<<"yes\n\n":cout<<"no\n\n";
 
   point.x = -1;
   point.y = 0;
+  point.print(point);
 
-  inRect(rectangle, point)?cout<<"yes\n":cout<<"no\n";
+  inRect(rectangle, point)?cout<<"yes\n\n":cout<<"no\n\n";
+
+  point.x = -15;
+  point.y = 0;
+  point.print(point);
+
+  inRect(rectangle, point)?cout<<"yes\n\n":cout<<"no\n\n";
 
   point.x = -1;
   point.y = -1.5;
+  point.print(point);
 
-  inRect(rectangle, point)?cout<<"yes\n":cout<<"no\n";
+  inRect(rectangle, point)?cout<<"yes\n\n":cout<<"no\n\n";
 
 
   return 0;
