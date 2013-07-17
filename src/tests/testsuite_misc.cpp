@@ -92,9 +92,21 @@ int main() {
   inRect(rectangle, point)?cout<<"yes\n\n":cout<<"no\n\n";*/
 
 
-  Matrix<float, Dynamic, Dynamic> areamat;
+  /*Matrix<float, Dynamic, Dynamic> areamat;
   Matrix<float, 1, 4> rect;
   rect << 0.0, 0.0, 2.0, 3.0;
+
+  cout << "Rect" << rect << endl;
+
+  cout << endl << "alignedRectInt Test" << endl;
+  alignedRectInt(rect, rect, areamat);
+  cout << "Rows " << areamat.rows() << " Cols " << areamat.cols() << endl;
+  cout << "Areamat" << endl << areamat << endl;*/
+
+  Matrix<double, Dynamic, Dynamic> areamat;
+  Matrix<double, 2, 4> rect;
+  rect << 308.498687744141, 301.4560546875, 106.437408447266, 240.276611328125,
+       810.169372558594, 329.236206054688, 106.490905761719, 253.474853515625;
 
   cout << "Rect" << rect << endl;
 
