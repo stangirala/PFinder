@@ -3,6 +3,7 @@
  */
 
 #include "utils.h"
+#include "utils.cpp"
 
 #include <iostream>
 
@@ -10,9 +11,10 @@ using namespace std;
 
 int main() {
 
+  int i, j;
   class point a, b, c, point;
 
-  a.x = 2; a.y = 4;
+  /*a.x = 2; a.y = 4;
   b.x = 1; b.y = 2;
 
   cout << "a - b : "; a.print (a - b);
@@ -65,7 +67,6 @@ int main() {
 
   inRect(rectangle, point)?cout<<"yes\n\n":cout<<"no\n\n";
 
-
   point.x = 1;
   point.y = 0;
   point.print(point);
@@ -88,8 +89,19 @@ int main() {
   point.y = -1.5;
   point.print(point);
 
-  inRect(rectangle, point)?cout<<"yes\n\n":cout<<"no\n\n";
+  inRect(rectangle, point)?cout<<"yes\n\n":cout<<"no\n\n";*/
 
+
+  Matrix<float, Dynamic, Dynamic> areamat;
+  Matrix<float, 1, 4> rect;
+  rect << 0.0, 0.0, 2.0, 3.0;
+
+  cout << "Rect" << rect << endl;
+
+  cout << endl << "alignedRectInt Test" << endl;
+  alignedRectInt(rect, rect, areamat);
+  cout << "Rows " << areamat.rows() << " Cols " << areamat.cols() << endl;
+  cout << "Areamat" << endl << areamat << endl;
 
   return 0;
 }

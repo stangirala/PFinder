@@ -68,5 +68,5 @@ void sort_points(class rectangle &rectangle);
 
 bool inRect(struct rectangle rectangle, class point point);
 
-template <typename Derived>
-bool rectint (const MatrixBase<Derived> a, const MatrixBase<Derived> b, MatrixBase<Derived> areamat);
+template <typename D1, typename D2, typename D3>
+void alignedRectInt(const MatrixBase<D1> &a, const MatrixBase<D2> &b, MatrixBase<D3> &areamat);

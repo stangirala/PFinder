@@ -243,3 +243,73 @@ bool inRect (rectangle rectangle, point point) {
 
   return result;
 }
+
+template <typename D1, typename D2, typename D3>
+void alignedRectInt(const MatrixBase<D1> &a, const MatrixBase<D2> &b, MatrixBase<D3> &areamat) {
+
+  int i, j;
+  float x11, x21, x12, x22, y11, y21, y12, y22, xinter, yinter;
+  rectangle temprect, rect1, rect2;
+  std::vector<rectangle> rectangles1, rectangles2;
+
+
+  //std::cout << "a has " << a.rows() << " rows. b has" << b.rows() << std::endl;
+
+  std::cout << "Pram rect1" << std::endl << a << std::endl;
+  std::cout << "Pram rect2" << std::endl << b << std::endl;
+
+  for (i = 0; i < a.rows(); i++) {
+
+    temprect.points[0].x = a(i,0); temprect.points[1].y = a(i, 1);
+    temprect.points[1].x = a(i,0) + a(i, 2); temprect.points[1].y = a(i, 1);
+    temprect.points[2].x = a(i,0) + a(i, 2); temprect.points[2].y = a(i, 1) + a(i, 3);
+    temprect.points[3].x = a(i,0); temprect.points[3].y = a(i, 1) + a(i, 3);
+
+    std::cout << "rect 1" << std::endl;
+    point::print(temprect.points[0]);
+    point::print(temprect.points[1]);
+    point::print(temprect.points[2]);
+    point::print(temprect.points[3]);
+
+    rectangles1.push_back(temprect);
+  }
+
+  for (i = 0; i < b.rows(); i++) {
+
+    temprect.points[0].x = b(i,0); temprect.points[1].y = b(i, 1);
+    temprect.points[1].x = b(i,0) + b(i, 2); temprect.points[1].y = b(i, 1);
+    temprect.points[2].x = b(i,0) + b(i, 2); temprect.points[2].y = b(i, 1) + b(i, 3);
+    temprect.points[3].x = b(i,0); temprect.points[3].y = b(i, 1) + b(i, 3);
+
+    std::cout << "rect 2" << std::endl;
+    point::print(temprect.points[0]);
+    point::print(temprect.points[1]);
+    point::print(temprect.points[2]);
+    point::print(temprect.points[3]);
+
+    // In case distances are negative.
+    sort_points(temprect);
+
+    rectangles2.push_back(temprect);
+  }
+
+  /*areamat.derived().resize(rectangles1.size(), rectangles2.size());
+
+  for (i = 0; i < rectangles1.size(); i++) {
+    for (j = 0; j < rectangles2.size(); j++) {
+
+      rect1 = rectangles1[i]; rect2 = rectangles2[j];
+
+      x11 = rect1.points[0].x; y11 = rect1.points[0].y;
+      x12 = rect1.points[2].x; y12 = rect1.points[2].y;
+
+      x21 = rect2.points[0].x; y21 = rect2.points[0].y;
+      x22 = rect2.points[2].x; y22 = rect2.points[2].y;
+
+      xinter = fmax(0, (fmin(x12, x22) - fmax(x11, x21)));
+      yinter = fmax(0, (fmin(y12, y22) - fmax(y11, y21)));
+
+      areamat(i, j) = xinter * yinter;
+    }
+  }*/
+}

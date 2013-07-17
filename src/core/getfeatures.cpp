@@ -69,7 +69,7 @@ void getfeature(std::string impath, float thresh, float scale, Matrix<float, Dyn
 
       modifiedcurrentbox.transpose();
 
-      rectint(modifiedcurrentbox, modifiedcurrentbox, areamat);
+      alignedRectInt(modifiedcurrentbox, modifiedcurrentbox, areamat);
 
       // modifiedcurrentbox is a Matrix that represents a rectangle.
 
