@@ -188,12 +188,22 @@ int main (int argc, char** argv) {
 
   //sizetemp = imfiles.size(); <- imfiles : std::vector<std::string>
   // std::vector<struct currim> imdata
-  for (i = 0; i < imfiles.size(); i++) {
 
-    //call get featyres and get a feat array and pdata.
+  int sizetemp = imfiles.size();
+  for (i = 0; i < sizetemp; i++) {
+
+    //call get features and get a feat array and pdata.
+
     // assign things to currim
+
     //imdata.push_back(currim);
   }
+
+
+
+
+
+
 
 
 

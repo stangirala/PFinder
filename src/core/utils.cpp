@@ -311,3 +311,23 @@ void alignedRectInt(const MatrixBase<D1> &a, const MatrixBase<D2> &b, MatrixBase
     }
   }
 }
+
+template <typename D1, typename D2>
+void repmat(const MatrixBase<D1> inp, int r1, int c1, MatrixBase<D2> &out) {
+
+  int i, j, oldr, oldc, newr, newc;
+
+
+  oldr = inp.rows();  oldc = inp.cols();
+  newr = inp.rows() * r1;  newc = inp.cols() * c1;
+
+  out.derived().resize(newr, newc);
+
+  for (i = 0; i < newr; i++) {
+    for (j = 0; j < newc; j++) {
+      out(i, j) = inp(i % oldr, j % oldc);
+    }
+  }
+
+  return;
+}

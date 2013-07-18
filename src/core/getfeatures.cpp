@@ -42,9 +42,10 @@
 
 void getfeature(std::string impath, float thresh, float scale, Matrix<float, Dynamic, Dynamic> persondata, std::vector<float> &feat) {
 
-  int i, j;
+  int i, j, size;
   float areafracthresh;
-  Matrix<float, dynamic, dynamic> modifiedcurrentbox, areamat;
+  Matrix<float, dynamic, dynamic> modifiedcurrentbox, areamat, areavec, areasum, pascalratiomat;
+  Matrix<int, 1, Dynamic > r, c;
 
 
   // Image_dude read(impath)
@@ -52,6 +53,8 @@ void getfeature(std::string impath, float thresh, float scale, Matrix<float, Dyn
 
   // img is a thingy that contains the image of impath.
   // this will have to be cv_mat.
+  // Ugh, we need to write this :|
+  // Fix this.
   hdetect_poselet(impath, thresh, scale, persondata, img)
 
   areafracthresh = 0.4;
@@ -71,14 +74,52 @@ void getfeature(std::string impath, float thresh, float scale, Matrix<float, Dyn
 
       alignedRectInt(modifiedcurrentbox, modifiedcurrentbox, areamat);
 
-      // modifiedcurrentbox is a Matrix that represents a rectangle.
+      /**********Check this***********/
+      size = (((persondata.cols() - 3) % 4) + 1);
+      areavec.resize(1, size);
+      for (i = 0; i < size; i++) {
+        areavec(0, i) = persondata(0, i) * persondata(0, i+1);
+      }
 
 
+      Matrix<float, Dynamic, Dynamic> temp1, temp2;
+      repmat(areavec, areamat.rows(), 1, temp1);
+      repmat(areavec.transpose(), 1, areamat.rows(), temp2);
+
+      areasum = temp1 + temp2;
+
+
+      for (i = 0; i < areasum.rows(); i++) {
+        for (j = 0; j < areasum.cols(); j++) {
+          pascalratiomat(i, j) = areasum(i, j) / (areasum(i, j) - areamat(i, j));
+        }
+      }
+
+      Matrix<float, Dynamic, Dynamic> temp;
+      // Along the same dimension?
+      temp = pascalratiomat.triangularView<Eigen::Upper>();
+      for (i = 0; i < temp.rows(); i++) {
+        for (j = 0; j < temp.cols(); j++) {
+          if (temp(i, j) > areafracthresh) {
+            r.resize(1, r.cols() + 1);
+            r(1, r.cols() - 1) = i;
+
+            c.resize(1, c.cols());
+            c(1, c.cols() - 1) = j;
+          }
+        }
+      }
+
+      if (r.cols() != 0) {
+        // Fix this.
+        framedet = fusedetections(r, c, persondata);
+        persondata = framedet;
+      }
     }
 
+    // Fix this.
+    feat = feature_vector(persondata, img);
   }
 
-
-  // feature_vector(persondata, img)
-
+  return;
 }
