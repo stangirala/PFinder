@@ -104,7 +104,7 @@ void getfeature(std::string impath, float thresh, float scale, Matrix<float, Dyn
             r.resize(1, r.cols() + 1);
             r(1, r.cols() - 1) = i;
 
-            c.resize(1, c.cols());
+            c.resize(1, c.cols() + 1);
             c(1, c.cols() - 1) = j;
           }
         }
