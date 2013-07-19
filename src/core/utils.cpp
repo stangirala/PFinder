@@ -312,6 +312,8 @@ void alignedRectInt(const MatrixBase<D1> &a, const MatrixBase<D2> &b, MatrixBase
   }
 }
 
+////////////////////////////////////////////////////////////////////////
+
 template <typename D1, typename D2>
 void repmat(const MatrixBase<D1> inp, int r1, int c1, MatrixBase<D2> &out) {
 
@@ -326,6 +328,24 @@ void repmat(const MatrixBase<D1> inp, int r1, int c1, MatrixBase<D2> &out) {
   for (i = 0; i < newr; i++) {
     for (j = 0; j < newc; j++) {
       out(i, j) = inp(i % oldr, j % oldc);
+    }
+  }
+
+  return;
+}
+
+template <typename D1, typename D2>
+void reshape(const MatrixBase<D1> &inp, int r, int c, MatrixBase<D2> &out) {
+
+  int i, j, k, l;
+
+
+  k = 0; l = 0;
+  for (i = 0; i < r; i++) {
+    for (j = 0; j < c; j++) {
+      out(j, i) = inp(l, k);
+
+      if (l == inp.rows()) {l = 0; k++;} else l++;
     }
   }
 

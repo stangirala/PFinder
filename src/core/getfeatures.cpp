@@ -23,6 +23,7 @@
 
 #include "test_feature.h"
 #include "utils.h"
+#include "fusedetections.h"
 
 /** \file getfeature.cpp
     \brief
@@ -40,33 +41,33 @@
  */
 
 
+using namespace::Eigen;
+using namespace::cv;
+
 void getfeature(std::string impath, float thresh, float scale, Matrix<float, Dynamic, Dynamic> persondata, std::vector<float> &feat) {
 
   int i, j, size;
   float areafracthresh;
-  Matrix<float, dynamic, dynamic> modifiedcurrentbox, areamat, areavec, areasum, pascalratiomat;
+  Matrix<float, Dynamic, Dynamic> modifiedcurrentbox, areamat, areavec, areasum, pascalratiomat;
   Matrix<int, 1, Dynamic > r, c;
+  Mat img;
 
 
-  // Image_dude read(impath)
+  // Load the image.
+  img = imread(impath, CV_LOAD_IMAGE_COLOR);
 
-
-  // img is a thingy that contains the image of impath.
-  // this will have to be cv_mat.
-  // Ugh, we need to write this :|
-  // Fix this.
-  hdetect_poselet(impath, thresh, scale, persondata, img)
+  // Detect poselets from the image.
+  hdetect_poselet(img, thresh, scale, persondata2)
 
   areafracthresh = 0.4;
 
+  // Identify a region as a person using the poselet.
   if (persondata.cols() != 0) {
-
     if (persondata.size() > 4) {
-
       modifiedcurrentbox.resize(4, persondata.cols() / 4);
       for (j = 0; j < persondata.cols() / 4; j++) {
         for (i = 0; i < 4; i++) {
-          modifiedcurrentbox.at(i, j) = persondata.at(i, j);
+          modifiedcurrentbox(i, j) = persondata(i, j);
         }
       }
 
@@ -112,7 +113,9 @@ void getfeature(std::string impath, float thresh, float scale, Matrix<float, Dyn
 
       if (r.cols() != 0) {
         // Fix this.
-        framedet = fusedetections(r, c, persondata);
+        // framedet is a column vector.
+        Matrix<float, 1, Dynamic> framedet;
+        fusedetections(r, c, persondata, framedet);
         persondata = framedet;
       }
     }

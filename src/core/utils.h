@@ -70,3 +70,6 @@ bool inRect(struct rectangle rectangle, class point point);
 
 template <typename D1, typename D2, typename D3>
 void alignedRectInt(const MatrixBase<D1> &a, const MatrixBase<D2> &b, MatrixBase<D3> &areamat);
+
+template<typename D1, typename D2>
+void reshape(const MatrixBase<D1> &inp, int r, int c, MatrixBase<D2> &out);
