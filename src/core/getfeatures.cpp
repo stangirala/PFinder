@@ -20,9 +20,12 @@
 
 #include <jakeVideo.h>
 #include <Eigen/Dense>
+#include <boost/filesystem.hpp>
 
 #include "test_feature.h"
 #include "utils.h"
+#include "getfeatures.h"
+#include "hdetect_poselets.h"
 #include "fusedetections.h"
 
 /** \file getfeature.cpp
@@ -40,11 +43,11 @@
 
  */
 
-
-using namespace::Eigen;
 using namespace::cv;
+using namespace::Eigen;
 
-void getfeature(std::string impath, float thresh, float scale, Matrix<float, Dynamic, Dynamic> persondata, std::vector<float> &feat) {
+template <typename D>
+void getfeatures(boost::filesystem::path impath, float thresh, float scale, MatrixBase<D> &persondata, std::vector<float> &feat) {
 
   int i, j, size;
   float areafracthresh;
@@ -54,10 +57,14 @@ void getfeature(std::string impath, float thresh, float scale, Matrix<float, Dyn
 
 
   // Load the image.
-  img = imread(impath, CV_LOAD_IMAGE_COLOR);
+  img = imread(impath.string(), CV_LOAD_IMAGE_COLOR);
+  // bicubic interpolation.
+  resize(img, img, cvSize(0, 0), 1, 1, INTER_CUBIC);
 
   // Detect poselets from the image.
-  hdetect_poselet(img, thresh, scale, persondata2)
+  // if you are passing around filename then they are boostfs path objects.
+  // persondata is established in this call.
+  hdetect_poselet(impath, thresh, scale, persondata);
 
   areafracthresh = 0.4;
 
@@ -112,7 +119,6 @@ void getfeature(std::string impath, float thresh, float scale, Matrix<float, Dyn
       }
 
       if (r.cols() != 0) {
-        // Fix this.
         // framedet is a column vector.
         Matrix<float, 1, Dynamic> framedet;
         fusedetections(r, c, persondata, framedet);
@@ -121,7 +127,7 @@ void getfeature(std::string impath, float thresh, float scale, Matrix<float, Dyn
     }
 
     // Fix this.
-    feat = feature_vector(persondata, img);
+    feature_vector(persondata, img, feat);
   }
 
   return;

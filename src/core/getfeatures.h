@@ -5,10 +5,10 @@
  *
  *
  *******************************************************************
- * FILENAME:    fusedetections.h
+ * FILENAME:    hdetect_poselets.h
  * AUTHOR(S):   Sarma Tangirala (vtangira@buffalo.edu)
  * DESCRIPTION:
- *   Header file for hdetect_poselets.cpp
+ *   Header file for getfeatures.cpp
  *
  ********************************************************************
  */
@@ -25,7 +25,10 @@
 #include <drwnBase.h>
 
 #include <jakeVideo.h>
+#include <Eigen/Dense>
+#include <boost/filesystem.hpp>
 
+#include "utils.h"
 
 template <typename D>
-void hdetect_poselets(boost::filesystem::path image, float thresh, float scale, MatrixBase<D> &persondata);
+void getfeatures(boost::filesystem::path impath, float thresh, float scale, Eigen::MatrixBase<D> &persondata, std::vector<float> &feat);

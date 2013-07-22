@@ -28,4 +28,4 @@
 
 
 template <typename D1, typename D2, typename D3>
-void fusedetections(const MatrixBase<D1> &r, const MatrixBase<D1> &c, const MatrixBase<D2> &framedata, MatrixBase<D3> &framedata);
+void fusedetections(const MatrixBase<D1> &r, const MatrixBase<D1> &c, const MatrixBase<D2> &persondata, MatrixBase<D3> &framedet);

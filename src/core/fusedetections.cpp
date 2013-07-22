@@ -34,9 +34,10 @@
 template <typename D1, typename D2, typename D3>
 void fusedetections(const MatrixBase<D1> &r, const MatrixBase<D1> &c, const MatrixBase<D2> &framedata, MatrixBase<D3> &framedet) {
 
-  int grouplabel, i, j, k;
+  int grouplabel, i, j, k, l, emptycounter, mean;
+  float sum;
   bool intersect;
-  Matrix<float, Dynamic, Dynamic> tempdata, framedent;
+  Matrix<float, Dynamic, Dynamic> tempdata, framedent, data;
   std::vector<std::vector<int> > groups;
 
 
@@ -82,23 +83,22 @@ void fusedetections(const MatrixBase<D1> &r, const MatrixBase<D1> &c, const Matr
 
       intersect = false;
     }
+  }
 
-    // Setup framedet using groups.
-    framedet.resize(1, groups.size() * 4);
-    // Fuse loop.
-    int mean;
-    for (i = 0; i < groups.size(); i++) {
-      sum = 0; count = 0;
-      for (j = groups[i].begin(); j != groups[i].end(); j++) {
-        sum += *j;
-      }
-      int mean = sum / groups[i].begin();
-      // Check the bound here.
-      for (k = (i-1)*4 + 1; k < i*4; k++) {
-        framedet(1, (i-1) * 4 + 1:i*4) = sum / groups[i].begin();
-      }
+  // Setup framedet using groups.
+  framedet.resize(1, groups.size() * 4);
+  // Fuse loop.
+  for (i = 0; i < groups.size(); i++) {
+    sum = 0; count = 0;
+    for (j = 0; j < groups[i].size(); j++) {
+      sum += groups[i][j];
     }
-
+    mean = sum / groups[i].size();
+    // Check the bound here.
+    for (j = i * 4; j < (i*4) + 4; j++) {
+      framedet(1, j) = mean;
+    }
+  }
 
   return;
 }

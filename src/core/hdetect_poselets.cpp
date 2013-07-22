@@ -5,10 +5,10 @@
  *
  *
  *******************************************************************
- * FILENAME:    fusedetections.cpp
+ * FILENAME:    hdetect_poselets.cpp
  * AUTHOR(S):   Sarma Tangirala (vtangira@buffalo.edu)
  * DESCRIPTION:
- *   Source file, fuseddetections.cpp
+ *   Source file, hdetect_poselets.cpp
  *
  ********************************************************************
  */
@@ -21,83 +21,89 @@
 #include <jakeVideo.h>
 #include <Eigen/Dense>
 
+//#include <boost/gil/gill_all.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/gil/extension/io/jpeg_io.hpp>
+#include <boost/bind.hpp>
+#include <boost/timer.hpp>
+#include <boost/format.hpp>
+#include <boost/ref.hpp>
+
 #include "test_feature.h"
 #include "utils.h"
 
-/** \file fusedetections.cpp
+#include <poselet_api.h>
+
+/** \file hdetect_poselets.cpp
     \brief
 
-    Fuses intersecting bounding boxes identifying an object. This is done by averaging them.
+    Uses poselets to detect humans in the given image.
 
  */
 
-template <typename D1, typename D2, typename D3>
-void fusedetections(const MatrixBase<D1> &r, const MatrixBase<D1> &c, const MatrixBase<D2> &framedata, MatrixBase<D3> &framedet) {
-
-  int grouplabel, i, j, k;
-  bool intersect;
-  Matrix<float, Dynamic, Dynamic> tempdata, framedent;
-  std::vector<std::vector<int> > groups;
+using namespace::cv;
+using namespace::Eigen;
+using namespace::std;
+using namespace::poselet_api;
+using namespace boost::gil;
 
 
-  data.resize(4, framedata.cols() / 4);
-  reshape(framedata, 4, framedata.cols() / 4, data);
-  data.transpose();
+template <typename D>
+void append_hit(const D &oh, vector<D> &hits) {
+  hits.push_back(oh);
+}
+
+template <typename D>
+void hdetect_poselets(boost::filesystem::path image, float thresh, float scale, MatrixBase<D> &persondata) {
+
+  int i, j;
+  string category, faster_detection, enable_bigq;
+  vector<ObjectHit> object_hits, filter;
+  vector<PoseletHit> poselet_hits;
+  bgr8_image_t img;
 
 
-  groups.push_back(vector<int>());
-  groups[0].push_back(r(1, 0)); groups[0].push_back(c(1, 0));
-  grouplabel = 0;
-  intersect = false;
-  for (i = 0; i < r.cols(); i++) {
-    emptycounter = 0;
-    for (j = 0; j <= grouplabel; j++) {
+  category = "person";
+  faster_detection = "false";
+  enable_bigq = "true";
 
-      // Find intersection of groups[j] and the current set of points
-      for (k = 0; k < groups[j].size(); k++) {
-        if (groups[j][k] == r(1, i) or groups[j][k] == c(1, i)) {
 
-          // Either row or column have matched. Merge to current group.
-          groups[j].push_back(r(1, i)); groups[j].push_back(c(1, i));
+  // Read image. Uses boost::gil to represent images.
+  jpeg_read_image(image.string(), img);
 
-          sort(groups[j].begin(), groups[j].end());
-          for (l = 1; l < groups[j].size(); l++) {
-            if (groups[j][l - 1] == groups[j][l])
-              groups[j].erase(groups[j].begin());
-          }
 
-          intersect = true;
-          break;
-        }
-      }
-      if (intersect != true) {
-        // Create new group only if ???
-        if (emptycounter == grouplabel) {
-          grouplabel++;
-          groups[grouplabel].push_back(r(1, i));
-          groups[grouplabel].push_back(c(1, i));
-        }
-        else emptycounter++;
-      }
+  // Not using enable_bigq or faster detection yet.
 
-      intersect = false;
+
+  // Get detected poselets
+  InitDetector(image.parent_path().c_str(), image.filename().c_str(), true);
+
+  Image img_proxy (
+    img.width(), img.height(), const_view(img).pixels().row_size(),
+    Image::k8Bit, Image::kRGB, interleaved_view_get_raw_data(const_view(img)));
+
+  RunDetector(img_proxy, boost::bind(append_hit<PoseletHit>, _1, boost::ref(poselet_hits)),
+                         boost::bind(append_hit<ObjectHit>, _1, boost::ref(object_hits)), 
+                         true, 0, false);
+
+
+  // Filter prediction on threshold and return persondata.
+  for (i = 0; i < object_hits.size(); i++) {
+    if (object_hits[i].score > thresh) {
+      filter.push_back(object_hits[i]);
     }
+  }
 
-    // Setup framedet using groups.
-    framedet.resize(1, groups.size() * 4);
-    // Fuse loop.
-    int mean;
-    for (i = 0; i < groups.size(); i++) {
-      sum = 0; count = 0;
-      for (j = groups[i].begin(); j != groups[i].end(); j++) {
-        sum += *j;
-      }
-      int mean = sum / groups[i].begin();
-      // Check the bound here.
-      for (k = (i-1)*4 + 1; k < i*4; k++) {
-        framedet(1, (i-1) * 4 + 1:i*4) = sum / groups[i].begin();
-      }
+  if (filter.size() > 0) {
+
+    persondata.derived().resize(1, filter.size() * 4);
+    for (j = 0; j < filter.size(); j += 4) {
+      persondata(0, j + 0) = filter[j].x0 / scale;
+      persondata(0, j + 1) = filter[j].y0 / scale;
+      persondata(0, j + 2) = filter[j].width / scale;
+      persondata(0, j + 3) = filter[j].height / scale;
     }
+  }
 
 
   return;
