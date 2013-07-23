@@ -126,7 +126,6 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
       }
     }
 
-    // Fix this.
     feature_vector(persondata, img, feat);
   }
 

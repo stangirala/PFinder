@@ -6,8 +6,12 @@
 #include "utils.cpp"
 
 #include <iostream>
+#include <Eigen/Dense>
+#include <cv.h>
 
 using namespace std;
+using namespace Eigen;
+using namespace cv;
 
 int main() {
 
@@ -103,7 +107,7 @@ int main() {
   cout << "Rows " << areamat.rows() << " Cols " << areamat.cols() << endl;
   cout << "Areamat" << endl << areamat << endl;*/
 
-  Matrix<double, Dynamic, Dynamic> areamat;
+  /*Matrix<double, Dynamic, Dynamic> areamat;
   Matrix<double, 2, 4> rect;
   rect << 308.498687744141, 301.4560546875, 106.437408447266, 240.276611328125,
        810.169372558594, 329.236206054688, 106.490905761719, 253.474853515625;
@@ -113,7 +117,10 @@ int main() {
   cout << endl << "alignedRectInt Test" << endl;
   alignedRectInt(rect, rect, areamat);
   cout << "Rows " << areamat.rows() << " Cols " << areamat.cols() << endl;
-  cout << "Areamat" << endl << areamat << endl;
+  cout << "Areamat" << endl << areamat << endl;*/
+
+  class cvMatAt t("/home/vtangira/Downloads/20120920_the-police-ghost-in-the-machine_33.jpg");
+  cout << t.At(20, 21, 2) << endl;
 
   return 0;
 }

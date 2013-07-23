@@ -5,6 +5,10 @@
 
 #include <Eigen/Dense>
 #include <Eigen/Core>
+#include <cv.h>
+#include <cxcore.h>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 #pragma once
 
@@ -37,6 +41,7 @@ class Log {
 
 };
 
+////////////////////////////////////////////////////////////////////////////////////
 
 class point {
 
@@ -71,8 +76,36 @@ bool inRect(struct rectangle rectangle, class point point);
 template <typename D1, typename D2, typename D3>
 void alignedRectInt(const MatrixBase<D1> &a, const MatrixBase<D2> &b, MatrixBase<D3> &areamat);
 
+///////////////////////////////////////////////////////////////////////////////////
+
+// Matrix Operations
+
 template<typename D1, typename D2>
 void repmat(const MatrixBase<D1> &inp, int r1, int c1, MatrixBase<D2> &out);
 
 template<typename D1, typename D2>
 void reshape(const MatrixBase<D1> &inp, int r, int c, MatrixBase<D2> &out);
+
+////////////////////////////////////////////////////////////////////////////////////
+
+// Wrapper class for cv::Mat access.
+
+class cvMatAt {
+
+  private:
+    std::vector<cv::Mat> channels;
+
+  public:
+    cvMatAt(cv::Mat image) {
+      cv::split(image, channels);
+    }
+
+    cvMatAt(std::string image) {
+      cv::Mat img;
+      img = cv::imread(image, CV_LOAD_IMAGE_COLOR);
+      cv::split(img, channels);
+    }
+
+    // Three channel image for now. No checking. Use va_list later.
+    int At(int i, int j, int k);
+};
