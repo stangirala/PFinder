@@ -120,7 +120,7 @@ int main() {
   cout << "Areamat" << endl << areamat << endl;*/
 
   class cvMatAt t("/home/vtangira/Downloads/20120920_the-police-ghost-in-the-machine_33.jpg");
-  cout << t.At(20, 21, 2) << endl;
+  cout << t.At<int>(20, 21, 2) << endl;
 
   return 0;
 }

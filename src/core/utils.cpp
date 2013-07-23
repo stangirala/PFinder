@@ -358,6 +358,7 @@ void reshape(const MatrixBase<D1> &inp, int r, int c, MatrixBase<D2> &out) {
 // i, j are on the plane. k is the colour channel.
 // width*height*dimension
 // opencv stores it as height*width*height. Indices are inverted here to match matlab.
+template <typename D>
 int cvMatAt::At(int i, int j, int k) {
 
   if (k > 2) {
@@ -375,7 +376,6 @@ int cvMatAt::At(int i, int j, int k) {
     exit(0);
   }
 
-  // Also, only ints for now.
-  return (channels[k].at<int>(j, i) % 256);
+  return (channels[k].at<D>(j, i) % 256);
 
 }
