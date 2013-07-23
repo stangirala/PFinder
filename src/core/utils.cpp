@@ -356,8 +356,8 @@ void reshape(const MatrixBase<D1> &inp, int r, int c, MatrixBase<D2> &out) {
 /////////////////////////////////////////////////////////////////////////////
 
 // i, j are on the plane. k is the colour channel.
-// width*height*dimension
-// opencv stores it as height*width*height. Indices are inverted here to match matlab.
+// width*height*channel --> i*j*k
+// opencv stores it as height*width*channel. Indices are inverted here to match matlab.
 template <typename D>
 int cvMatAt::At(int i, int j, int k) {
 

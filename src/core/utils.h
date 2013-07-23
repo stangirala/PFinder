@@ -109,4 +109,5 @@ class cvMatAt {
     // Three channel image for now. No checking. Use va_list later.
     template <typename D>
     int At(int i, int j, int k);
+
 };

@@ -26,9 +26,9 @@ int main( int argc, char** argv )
 
   cv::split(src, v_bgr);
 
-  cout << "Img Size: " << v_bgr[0].size();
+  cout << "Img Size: " << v_bgr[0].size() << endl;;
 
-  cout << v_bgr[2].at<int>(19, 19) % 256 << endl;
+  cout << "Pixel Norm - " << v_bgr[2].at<int>(20, 19) % 256 << endl;
 
   return 0;
 }

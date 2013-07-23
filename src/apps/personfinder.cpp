@@ -232,7 +232,7 @@ int main (int argc, char** argv) {
 
   img1->load("/home/vtangira/test/jake/data/wildturkey.png");
   img2->load("/home/vtangira/test/jake/data/yoyo.avi");
-  score = hist_distance(img1.get(), img2.get());
+  score = hist_distance(img1.get(), img2.get(), 10, 1);
   strstream << "Score:" << score << endl;
   log->log_msg(strstream.str());
   strstream.str(std::string());

@@ -43,9 +43,9 @@
     Computes Hellinger distance as the norm of the difference of the
     respective squared histogram values.
  */
-double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2) {
+double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2, int bin, int type) {
 
-  jake::jvColorHistogramProjection HistProj;
+  jake::jvColorHistogramProjection HistProj(bin, bin, bin, bin, bin, type);
 
   std::vector<std::shared_ptr<jake::jvVideoFeature>> VidFeature[2];
 
