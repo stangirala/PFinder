@@ -30,5 +30,5 @@
 
 #include "utils.h"
 
-template <typename D>
-void getfeatures(boost::filesystem::path impath, float thresh, float scale, Eigen::MatrixBase<D> &persondata, std::vector<float> &feat);
+template <typename D1, typename D2>
+void getfeatures(boost::filesystem::path impath, float thresh, float scale, Eigen::MatrixBase<D1> &persondata, MatrixBase<D2> &feat);

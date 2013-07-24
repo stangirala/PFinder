@@ -20,6 +20,10 @@
 
 #include "hist_distance.h"
 #include "test_feature.h"
+#include "getfeatures.h"
+#include "getfeatures.cpp"
+//#include "hdetect_poselet.cpp"
+#include "feature_vector.cpp"
 #include "utils.h"
 
 // Input order
@@ -42,8 +46,6 @@
 int main (int argc, char** argv) {
 
   double score;
-
-  Matrix<float, 1, Dynamic> feat;
 
   std::shared_ptr<jake::jvVideo> img1, img2, img3, test_image;
 
@@ -152,7 +154,6 @@ int main (int argc, char** argv) {
    canonical ones. Also, this is another dig at how badly the Boost docs are organized. Maybe its a fault on my person
    but they are quite irritating.*/
   /*std::cout << "TEST: " << boostfs::is_directory(boostfs::path("~/Downloads"));
-  std::cout << "TEST: " << boostfs::is_directory(boostfs::path("/home/vtangira/Downloads")) << endl;
   for (boostfs::directory_iterator dir(boostfs::path("/home/vtangira/Downloads")), end_itr; dir != end_itr; dir++) {
     std::cout << dir->path() << std::endl;
   }*/
@@ -189,10 +190,16 @@ int main (int argc, char** argv) {
   //sizetemp = imfiles.size(); <- imfiles : std::vector<std::string>
   // std::vector<struct currim> imdata
 
+  Matrix<float, Dynamic, Dynamic> persondata, feat1;
+  Matrix<float, 1, Dynamic> feat;
+  boostfs::path temppath;
   int sizetemp = imfiles.size();
   for (i = 0; i < sizetemp; i++) {
 
-    //call get features and get a feat array and pdata.
+    temppath = imfiles[i];
+    getfeatures(temppath, thresh, scale, persondata, feat1);
+    cout << "PersonData" << persondata << endl;
+    cout << "Feat" << feat1 << endl;
 
     // assign things to currim
 

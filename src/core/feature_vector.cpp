@@ -23,7 +23,6 @@
 #include <boost/filesystem.hpp>
 
 #include "utils.h"
-#include "feature_vector.h"
 
 /** \file getfeature.cpp
     \brief
@@ -45,13 +44,13 @@ using namespace::std;
 template <typename D1, typename D2>
 void feature_vector(const MatrixBase<D1> &pdata, const Mat &img, MatrixBase<D2> &feat) {
 
-  int n, i, j, l, m, n;
+  int n, i, j, l;
   float sum;
   Matrix<float, Dynamic, Dynamic> curr;
-  class cvMatAt image(img);
-  jake::jvColorHistogramProjection projector;
+  jake::jvColorHistogramProjection *projector;
   shared_ptr<jake::jvVideoFull> image;
-  vector<jvVideoFeature> imhist;
+  vector<shared_ptr<jake::jvVideoFeature> > imhist;
+  jake::jvColorHistogramFeature *hist;
   jake::jvMat3D temp;
   Mat inputframe;
 
@@ -59,7 +58,7 @@ void feature_vector(const MatrixBase<D1> &pdata, const Mat &img, MatrixBase<D2> 
 
   n = 30;
 
-  projector(n/3, n/3, n/3, n/3, n/3, 1);
+  projector = new jake::jvColorHistogramProjection(n/3, n/3, n/3, n/3, n/3, 1);
 
   feat.derived() = Matrix<float, Dynamic, Dynamic>::Zero(pdata.cols() / 4, n);
 
@@ -76,36 +75,41 @@ void feature_vector(const MatrixBase<D1> &pdata, const Mat &img, MatrixBase<D2> 
 
     // Setup a jvMat3D object. Fill it up and then setup a jvVideoFull object.
     // length, height, width
-    temp.getvolume<int>(img, inputframe, 1, 1,
-                        curr(0, 0), curr(0, 0) + curr(0, 2), curr(0, 1), curr(0, 1) + curr(0, 3));
+    temp.getvolume<int>(const_cast<Mat &>(img), inputframe, 1, 1,
+                        curr(0, 0), curr(0, 0) + curr(0, 2),
+                        curr(0, 1), curr(0, 1) + curr(0, 3));
 
-    image.reset(new jake::jvVideoFull(inputframe))
+    image.reset(new jake::jvVideoFull(inputframe));
 
-    projector.project(*(image.get()), imhist);
+    projector->project(*(image.get()), imhist);
+
+    // Collect Histogram
+    hist = (jake::jvColorHistogramFeature *)imhist[0].get();
+
 
     // Normalize and collect histogram for each channel.
     sum = 0;
     for (l = 0; l < n/3; l++) {
-      sum += imhist[0][l];
+      sum += hist->v[0].at(l);
     }
     for (l = 0; l < n/3; l++) {
-      feat(i, l) = imhist[0][l] / sum;
-    }
-
-    sum = 0;
-    for (l = 0; l < n/3; l++) {
-      sum += imhist[1][l];
-    }
-    for (l = 0; l < n/3; l++) {
-      feat(i + n/3, l + n/3) = imhist[1][l] / sum;
+      feat(i, l) = hist->v[0].at(l) / sum;
     }
 
     sum = 0;
     for (l = 0; l < n/3; l++) {
-      sum += imhist[2][l];
+      sum += hist->v[1].at(l);
     }
     for (l = 0; l < n/3; l++) {
-      feat(i + 2*n/3, l + 2*n/3) = imhist[2][l] / sum;
+      feat(i + n/3, l + n/3) = hist->v[1].at(l) / sum;
+    }
+
+    sum = 0;
+    for (l = 0; l < n/3; l++) {
+      sum += hist->v[2].at(l);
+    }
+    for (l = 0; l < n/3; l++) {
+      feat(i + 2*n/3, l + 2*n/3) = hist->v[2].at(l) / sum;
     }
   }
 

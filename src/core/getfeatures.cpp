@@ -25,7 +25,8 @@
 #include "test_feature.h"
 #include "utils.h"
 #include "getfeatures.h"
-#include "hdetect_poselets.h"
+#include "hdetect_poselets.cpp"
+#include "feature_vector.cpp"
 #include "fusedetections.h"
 
 /** \file getfeature.cpp

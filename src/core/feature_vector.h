@@ -32,4 +32,4 @@
 #include "utils.h"
 
 template <typename D1, typename D2>
-void feature_vector(const MatrixBase<D1> &pdata, const string &imagepath, const Mat &img, MatrixBase<D2> &feat);
+void feature_vector(const MatrixBase<D1> &pdata, const cv::Mat &img, MatrixBase<D2> &feat);
