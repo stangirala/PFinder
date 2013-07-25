@@ -18,13 +18,11 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
+#include "utils.h"
+
 #include "hist_distance.h"
 #include "test_feature.h"
 #include "getfeatures.h"
-#include "getfeatures.cpp"
-//#include "hdetect_poselet.cpp"
-#include "feature_vector.cpp"
-#include "utils.h"
 
 // Input order
 // Please use absolute file paths _everywhere_.

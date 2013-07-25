@@ -5,7 +5,7 @@ PROJ_PATH := $(shell pwd)/..
 
 # library source files --------------------
 
-CORE_LIBFILES = utils.cpp hist_distance.cpp test_feature.cpp getfeatures.cpp hdetect_poselets.cpp fusedetections.cpp feature_vector.cpp
+CORE_LIBFILES = utilsconfig.cpp hist_distance.cpp test_feature.cpp utilsconfig.cpp
 CORE_LIB      = libPROJcore.a
 
 

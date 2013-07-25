@@ -44,8 +44,6 @@ class Log {
 
 };
 
-Log::DEBUG = OFF;
-
 void Log::log_msg(std::string msg) {
 
   if (DEBUG == ON) {
@@ -62,7 +60,7 @@ Log::Log(state_t state, std::string stream) {
   if (Log::stream_ptr == nullptr) {
     if (stream == "cout") {
       std::streambuf *buffer = std::cout.rdbuf();
-      Log::stream_ptr.reset(new std::iostream(buffer));
+      stream_ptr.reset(new std::iostream(buffer));
     }
   }
 
@@ -93,7 +91,7 @@ class rectangle {
   public:
     point points[4];
 
-    inline void sort_points();
+    //inline void sort_points();
 
     inline static void swap(point &a, point &b);
 
@@ -102,9 +100,6 @@ class rectangle {
     inline static bool inRect (rectangle rectangle, point point);
 };
 
-void sort_points(class rectangle &rectangle);
-
-bool inRect(struct rectangle rectangle, class point point);
 
 template <typename D1, typename D2, typename D3>
 void alignedRectInt(const MatrixBase<D1> &a, const MatrixBase<D2> &b, MatrixBase<D3> &areamat);
@@ -250,7 +245,7 @@ void point::print (point p) {
 }
 
 
-static void rectangle::swap(point &a, point &b) {
+void rectangle::swap(point &a, point &b) {
 
   point temp;
 
@@ -259,7 +254,7 @@ static void rectangle::swap(point &a, point &b) {
   b.x = temp.x; b.y = temp.y;
 }
 
-static void rectangle::sort_points(class rectangle &rectangle) {
+void rectangle::sort_points(class rectangle &rectangle) {
 
   int i, j, count;
 
@@ -287,13 +282,13 @@ static void rectangle::sort_points(class rectangle &rectangle) {
 }
 
 // Check if point is inside the space of the rectangle.
-static bool ::rectangle::inRect (rectangle rectangle, point point) {
+bool rectangle::inRect (rectangle rectangle, point point) {
 
   class point length, breadth, point_centre;
   bool result;
 
 
-  sort_points(rectangle);
+  rectangle::sort_points(rectangle);
 
   if (point.x <= 0 && point.y <= 0)
     point_centre = ((rectangle.points[2] - rectangle.points[0])) - point*2;
@@ -336,7 +331,7 @@ void alignedRectInt(const MatrixBase<D1> &a, const MatrixBase<D2> &b, MatrixBase
     point::print(temprect.points[3]);
 
     // In case distances are negative.
-    sort_points(temprect);
+    rectangle::sort_points(temprect);
 
     rectangles1.push_back(temprect);
   }
@@ -355,7 +350,7 @@ void alignedRectInt(const MatrixBase<D1> &a, const MatrixBase<D2> &b, MatrixBase
     point::print(temprect.points[3]);
 
     // In case distances are negative.
-    sort_points(temprect);
+    rectangle::sort_points(temprect);
 
     rectangles2.push_back(temprect);
   }
