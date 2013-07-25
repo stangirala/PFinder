@@ -67,13 +67,16 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
   // Detect poselets from the image.
   // if you are passing around filename then they are boostfs path objects.
   // persondata is established in this call.
+  cout << "Detecting Poselets " << endl;
   hdetect_poselets(impath, thresh, scale, persondata);
+  cout << "Done detecting Poselets" << endl;
 
   areafracthresh = 0.4;
 
   // Identify a region as a person using the poselet.
-  if (persondata.cols() != 0) {
-    if (persondata.size() > 4) {
+  cout << "persondata cols and rows " << persondata.cols() << persondata.rows() << endl;
+  if (persondata.cols() != 0 || persondata.rows() != 0) {
+    if (persondata.cols() > 4) {
       modifiedcurrentbox.resize(4, persondata.cols() / 4);
       for (j = 0; j < persondata.cols() / 4; j++) {
         for (i = 0; i < 4; i++) {
@@ -81,9 +84,13 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
         }
       }
 
+      cout << "Setting up Modified Currentbox" << endl;
+
       modifiedcurrentbox.transpose();
 
       alignedRectInt(modifiedcurrentbox, modifiedcurrentbox, areamat);
+
+      cout << "Calculating Rectint" << endl;
 
       /**********Check this***********/
       size = (((persondata.cols() - 3) % 4) + 1);
@@ -92,10 +99,14 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
         areavec(0, i) = persondata(0, i) * persondata(0, i+1);
       }
 
+      cout << "Setup areavec" << endl;
+
 
       Matrix<float, Dynamic, Dynamic> temp1, temp2;
       repmat(areavec, areamat.rows(), 1, temp1);
       repmat(areavec.transpose(), 1, areamat.rows(), temp2);
+
+      cout << "Calculating repmat" << endl;
 
       areasum = temp1 + temp2;
 
@@ -129,7 +140,11 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
       }
     }
 
+  // Setup Bounds checking here.
+
+    cout << "Setting up feature vector" << endl;
     feature_vector(persondata, img, feat);
+    cout << "Done setting up feature vector" << endl;
   }
 
   return;

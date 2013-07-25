@@ -195,6 +195,7 @@ int main (int argc, char** argv) {
   for (i = 0; i < sizetemp; i++) {
 
     temppath = imfiles[i];
+    cout << "Entering getfeatures" << endl << endl;;
     getfeatures(temppath, thresh, scale, persondata, feat1);
     cout << "PersonData" << persondata << endl;
     cout << "Feat" << feat1 << endl;

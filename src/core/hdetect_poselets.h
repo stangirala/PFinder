@@ -54,57 +54,96 @@ void append_hit(const D &oh, vector<D> &hits) {
   hits.push_back(oh);
 }
 
+bool file_exists(string filename) {
+
+  ifstream testfile(filename.c_str());
+  return !testfile;
+}
+
 template <typename D>
 void hdetect_poselets(boost::filesystem::path image, float thresh, float scale, MatrixBase<D> &persondata) {
 
   int i, j;
-  string category, faster_detection, enable_bigq;
+  string faster_detection, enable_bigq, modelname, modeldir;
   vector<ObjectHit> object_hits, filter;
   vector<PoseletHit> poselet_hits;
   bgr8_image_t img;
 
 
-  category = "person";
   faster_detection = "false";
   enable_bigq = "true";
 
+  if (file_exists(image.string())) {
+    cout << "Cannot open file - " <<  image.string() << endl
+         << "Exiting" << endl;
+    exit(0);
+  }
 
   // Read image. Uses boost::gil to represent images.
-  jpeg_read_image(image.string(), img);
+  try {
+    jpeg_read_image(image.string().c_str(), img);
+  } catch (std::ios_base::failure f) {
+    cout << f.what() << endl;
+    exit(0);
+  }
 
 
   // Not using enable_bigq or faster detection yet.
 
 
   // Get detected poselets
-  InitDetector(image.parent_path().c_str(), image.filename().c_str(), true);
+  modeldir = "/home/vtangira/Downloads/poselets.cpp/data/categories";
+  modelname = "person";
+  if (InitDetector(modeldir.c_str(), modelname.c_str(), true)) {
+    cout << "Failed to load model to detect Humans." << endl;
+  }
 
   Image img_proxy (
     img.width(), img.height(), const_view(img).pixels().row_size(),
     Image::k8Bit, Image::kRGB, interleaved_view_get_raw_data(const_view(img)));
 
+
+  cout << "Running Detector on Input - " << image.string() << endl;
+
   RunDetector(img_proxy, boost::bind(append_hit<PoseletHit>, _1, boost::ref(poselet_hits)),
-                         boost::bind(append_hit<ObjectHit>, _1, boost::ref(object_hits)), 
+                         boost::bind(append_hit<ObjectHit>, _1, boost::ref(object_hits)),
                          true, 0, false);
 
 
   // Filter prediction on threshold and return persondata.
+  cout << "DETECTED POSELETS" << endl;
   for (i = 0; i < object_hits.size(); i++) {
+      cout << "Found poselet: "
+      << object_hits[i].x0 << " "
+      << object_hits[i].y0 << " "
+      << object_hits[i].width << " "
+      << object_hits[i].height << " "
+      << object_hits[i].score << endl;
     if (object_hits[i].score > thresh) {
       filter.push_back(object_hits[i]);
     }
   }
+  cout << "DONE PRINT" << endl;
+
+  cout << "Filtering Detections." << endl;
 
   if (filter.size() > 0) {
 
     persondata.derived().resize(1, filter.size() * 4);
-    for (j = 0; j < filter.size(); j += 4) {
-      persondata(0, j + 0) = filter[j].x0 / scale;
-      persondata(0, j + 1) = filter[j].y0 / scale;
-      persondata(0, j + 2) = filter[j].width / scale;
-      persondata(0, j + 3) = filter[j].height / scale;
+    int index = 0;
+    for (j = 0; j < filter.size(); j++) {
+      persondata(0, index + 0) = filter[j].x0 / scale;
+      persondata(0, index + 1) = filter[j].y0 / scale;
+      persondata(0, index + 2) = filter[j].width / scale;
+      persondata(0, index + 3) = filter[j].height / scale;
+      index += 4;
     }
   }
+
+
+  cout << "Persondata from hdetect_poselets" << persondata << endl;
+
+  cout << "Exiting hdetect_poselets" << endl;
 
 
   return;
