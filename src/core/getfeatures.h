@@ -61,6 +61,9 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
 
   // Load the image.
   img = imread(impath.string(), CV_LOAD_IMAGE_COLOR);
+  if (!img.data) {
+    cout << "Unable to open " << impath.string() << endl;
+  }
   // bicubic interpolation.
   resize(img, img, cvSize(0, 0), 1, 1, INTER_CUBIC);
 
@@ -143,6 +146,8 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
   // Setup Bounds checking here.
 
     cout << "Setting up feature vector" << endl;
+    cout << "PDATA BEING SENT TO FEATURE_VECTOR" << endl << persondata << endl;
+    cout << "IMAGE NAME IS " << impath.string() << endl;
     feature_vector(persondata, img, feat);
     cout << "Done setting up feature vector" << endl;
   }

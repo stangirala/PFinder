@@ -56,14 +56,16 @@ void feature_vector(const MatrixBase<D1> &pdata, const Mat &img, MatrixBase<D2> 
   jake::jvMat3D temp;
   Mat inputframe;
 
+  cout << "Entering feature vector" << endl;
 
   n = 30;
 
   projector = new jake::jvColorHistogramProjection(n/3, n/3, n/3, n/3, n/3, 1);
 
-  feat.derived() = Matrix<float, Dynamic, Dynamic>::Zero(pdata.cols() / 4, n);
+  feat.derived().resize(pdata.cols() / 4, n);
+  feat = Matrix<float, Dynamic, Dynamic>::Zero(pdata.cols() / 4, n);
 
-  curr.resize(0, pdata.cols());
+  curr.resize(1, pdata.cols());
   for (i = 0; i < pdata.cols() / 4; i++) {
     for (j = i*4; j < (i+1) * 4; j++) {
       curr(0, j) = pdata(0, j);
@@ -74,11 +76,7 @@ void feature_vector(const MatrixBase<D1> &pdata, const Mat &img, MatrixBase<D2> 
     curr(0, 2) = floor(curr(0, 2));
     curr(0, 3) = floor(curr(0, 3));
 
-    // Setup a jvMat3D object. Fill it up and then setup a jvVideoFull object.
-    // length, height, width
-    temp.getvolume<int>(const_cast<Mat &>(img), inputframe, 1, 1,
-                        curr(0, 0), curr(0, 0) + curr(0, 2),
-                        curr(0, 1), curr(0, 1) + curr(0, 3));
+    inputframe = img(Rect(curr(0, 0), curr(0, 1), curr(0, 2), curr(0, 3)));
 
     image.reset(new jake::jvVideoFull(inputframe));
 
@@ -87,9 +85,8 @@ void feature_vector(const MatrixBase<D1> &pdata, const Mat &img, MatrixBase<D2> 
     // Collect Histogram
     hist = (jake::jvColorHistogramFeature *)imhist[0].get();
 
-
     // Normalize and collect histogram for each channel.
-    sum = 0;
+    sum = 1;
     for (l = 0; l < n/3; l++) {
       sum += hist->v[0].at(l);
     }
@@ -97,22 +94,31 @@ void feature_vector(const MatrixBase<D1> &pdata, const Mat &img, MatrixBase<D2> 
       feat(i, l) = hist->v[0].at(l) / sum;
     }
 
-    sum = 0;
+    sum = 1;
     for (l = 0; l < n/3; l++) {
       sum += hist->v[1].at(l);
     }
     for (l = 0; l < n/3; l++) {
-      feat(i + n/3, l + n/3) = hist->v[1].at(l) / sum;
+      feat(i, l + n/3) = hist->v[1].at(l) / sum;
     }
 
-    sum = 0;
+    sum = 1;
     for (l = 0; l < n/3; l++) {
       sum += hist->v[2].at(l);
     }
     for (l = 0; l < n/3; l++) {
-      feat(i + 2*n/3, l + 2*n/3) = hist->v[2].at(l) / sum;
+      feat(i, l + 2*n/3) = hist->v[2].at(l) / sum;
     }
   }
+
+  cout << "feat in feature_vector " << endl;
+  for (int l = 0; l < feat.rows(); l++) {
+    for (int m = 0; m < feat.cols(); m++)
+      cout << feat(l, m) << " ";
+    cout << endl;
+  }
+
+  cout << "Done normalizing the histogram" << endl;
 
   return;
 }

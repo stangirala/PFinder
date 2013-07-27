@@ -111,19 +111,19 @@ void hdetect_poselets(boost::filesystem::path image, float thresh, float scale, 
 
 
   // Filter prediction on threshold and return persondata.
-  cout << "DETECTED POSELETS" << endl;
+  //cout << "DETECTED POSELETS" << endl;
   for (i = 0; i < object_hits.size(); i++) {
-      cout << "Found poselet: "
+      /*cout << "Found poselet: "
       << object_hits[i].x0 << " "
       << object_hits[i].y0 << " "
       << object_hits[i].width << " "
       << object_hits[i].height << " "
-      << object_hits[i].score << endl;
+      << object_hits[i].score << endl;*/
     if (object_hits[i].score > thresh) {
       filter.push_back(object_hits[i]);
     }
   }
-  cout << "DONE PRINT" << endl;
+  //cout << "DONE PRINT" << endl;
 
   cout << "Filtering Detections." << endl;
 
@@ -131,6 +131,7 @@ void hdetect_poselets(boost::filesystem::path image, float thresh, float scale, 
 
     persondata.derived().resize(1, filter.size() * 4);
     int index = 0;
+    scale = 1;
     for (j = 0; j < filter.size(); j++) {
       persondata(0, index + 0) = filter[j].x0 / scale;
       persondata(0, index + 1) = filter[j].y0 / scale;

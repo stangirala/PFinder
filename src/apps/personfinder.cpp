@@ -170,8 +170,21 @@ int main (int argc, char** argv) {
               ) {
 
             if (dir->path().extension().string() == image_type.at(j)) {
-              cout << "HERE: " << dir->path().string() << endl;
-              imfiles.push_back(dir->path().string());
+              cout << "Reading - " << dir->path().string() << endl;
+              // Check that the image is in jpeg.
+              if (dir->path().extension().compare(".jpg") == 0) {
+                imfiles.push_back(dir->path().string());
+              }
+              else {
+                // Convert it and temp it.
+                Mat temp = imread(dir->path().string(), CV_LOAD_IMAGE_COLOR);
+                vector<int> params;
+                params.push_back(CV_IMWRITE_JPEG_QUALITY);
+                params.push_back(100);
+                cout << "New File - " << dir->path().parent_path().string() + "/temp_" + dir->path().filename().string() + ".jpg" << endl;
+                imwrite(dir->path().parent_path().string() + "/temp_" + dir->path().filename().string() + ".jpg", temp, params);
+              }
+
             }
           }
         }
@@ -192,13 +205,14 @@ int main (int argc, char** argv) {
   Matrix<float, 1, Dynamic> feat;
   boostfs::path temppath;
   int sizetemp = imfiles.size();
+  cout << "SIZE OF IMFILES " << sizetemp << endl;
   for (i = 0; i < sizetemp; i++) {
 
     temppath = imfiles[i];
-    cout << "Entering getfeatures" << endl << endl;;
+    cout << "Entering getfeatures" << endl << endl;
     getfeatures(temppath, thresh, scale, persondata, feat1);
-    cout << "PersonData" << persondata << endl;
-    cout << "Feat" << feat1 << endl;
+    //cout << "PersonData" << persondata << endl;
+    //cout << "Feat" << feat1 << endl;
 
     // assign things to currim
 

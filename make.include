@@ -21,7 +21,7 @@ LDCONFIG = /sbin/ldconfig
 
 
 # compile and link debug symbols (set to 1 in make.local)
-PROJ_DEBUG_SYMBOLS = 0
+PROJ_DEBUG_SYMBOLS = 1
 
 # force 32-bit compile (set to 1 in make.local)
 PROJ_FORCE_32BIT = 0
