@@ -209,17 +209,16 @@ int main (int argc, char** argv) {
   for (i = 0; i < sizetemp; i++) {
 
     temppath = imfiles[i];
+    cout << "IMAGE NAME IS " << temppath.string() << endl;
     cout << "Entering getfeatures" << endl << endl;
     getfeatures(temppath, thresh, scale, persondata, feat1);
-    //cout << "PersonData" << persondata << endl;
-    //cout << "Feat" << feat1 << endl;
 
     // assign things to currim
 
     //imdata.push_back(currim);
   }
 
-
+  cout << "Exiting loop" << endl;
 
 
 
@@ -241,7 +240,7 @@ int main (int argc, char** argv) {
   /****
   * Test Code.
   *****/
-  test_image.reset(new jake::jvVideoFull());
+  /*test_image.reset(new jake::jvVideoFull());
 
   img1.reset(new jake::jvVideoFull());
   img2.reset(new jake::jvVideoFull());
@@ -269,7 +268,7 @@ int main (int argc, char** argv) {
       strstream << endl;
     strstream << feat(0, j) << " ";
   }
-  log->log_msg(strstream.str());
+  log->log_msg(strstream.str());*/
 
   return 0;
 }

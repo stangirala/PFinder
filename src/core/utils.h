@@ -115,9 +115,7 @@ void rectint(const MatrixBase<Derived> a, const MatrixBase<Derived> b, MatrixBas
 
   areamat.derived().resize(a.rows(), b.rows());
 
-
   // walk over the two rectangles and do stuff.
-
   for (i = 0; i < a.rows(); i++) {
 
     temp.x = a.at(i, 0);
@@ -316,6 +314,9 @@ void alignedRectInt(const MatrixBase<D1> &a, const MatrixBase<D2> &b, MatrixBase
   rectangle temprect, rect1, rect2;
   std::vector<rectangle> rectangles1, rectangles2;
 
+  std::cout << "Setup first rectangle" << std::endl;
+  std::cout << "Size of first rectangle " << a.rows() << " " << a.cols() << std::endl;
+
   for (i = 0; i < a.rows(); i++) {
 
 
@@ -336,6 +337,7 @@ void alignedRectInt(const MatrixBase<D1> &a, const MatrixBase<D2> &b, MatrixBase
     rectangles1.push_back(temprect);
   }
 
+  std::cout << "Setup second rectangle" << std::endl;
   for (i = 0; i < b.rows(); i++) {
 
     temprect.points[0].x = b(i,0); temprect.points[0].y = b(i, 1);
@@ -355,7 +357,10 @@ void alignedRectInt(const MatrixBase<D1> &a, const MatrixBase<D2> &b, MatrixBase
     rectangles2.push_back(temprect);
   }
 
+  std::cout << "RESIZE" << std::endl;
   areamat.derived().resize(rectangles1.size(), rectangles2.size());
+
+  std::cout << "Setup second rectangle" << std::endl;
 
   for (i = 0; i < rectangles1.size(); i++) {
     for (j = 0; j < rectangles2.size(); j++) {
@@ -389,8 +394,7 @@ void repmat(const MatrixBase<D1> &inp, int r1, int c1, MatrixBase<D2> &out) {
   oldr = inp.rows();  oldc = inp.cols();
   newr = inp.rows() * r1;  newc = inp.cols() * c1;
 
-  //out.derived().resize(newr, newc);
-  out.resize(newr, newc);
+  out.derived().resize(newr, newc);
 
   for (i = 0; i < newr; i++) {
     for (j = 0; j < newc; j++) {
