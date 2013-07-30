@@ -17,6 +17,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "utils.h"
 
@@ -44,13 +45,12 @@
 int main (int argc, char** argv) {
 
   double score;
-
   std::shared_ptr<jake::jvVideo> img1, img2, img3, test_image;
-
-  std::vector<std::string> paths_to_files, image_type, image_index, imfiles;
+  std::vector<std::string> paths_to_files, image_type, image_index, imfiles, vid_type, vidfiles;
+  std::vector<struct currim_t> imdata;
+  std::vector<std::vector<struct currim_t> > viddata;
 
   namespace boostfs = boost::filesystem;
-
   boostfs::path pathsfile, imtypes, vidtypes, testim;
   boostfs::ifstream paths, im_types, vid_types, test_im;
 
@@ -85,7 +85,6 @@ int main (int argc, char** argv) {
       cout << "vid_types argument is incorrect." << endl;
       exit(1);
     }
-    vid_types.open(vidtypes);
 
     testim = argv[4];
     if (!boost::filesystem::exists(testim)) {
@@ -121,6 +120,10 @@ int main (int argc, char** argv) {
 
   // Get paths to files.
   paths.open(pathsfile);
+  if (paths.fail()) {
+    cout << "Unable to paths file. Exiting" << endl;
+    exit(1);
+  }
   while (paths) {
     std::string str;
     getline(paths, str);
@@ -130,10 +133,13 @@ int main (int argc, char** argv) {
     }
   }
 
-
   // Get image types
   // Change the way extensions are handled here.
   im_types.open(imtypes);
+  if (im_types.fail()) {
+    cout << "Unable to read im_types file. Exiting" << endl;
+    exit(1);
+  }
   while (im_types) {
     std::string str;
     getline(im_types, str);
@@ -144,7 +150,22 @@ int main (int argc, char** argv) {
     image_type.push_back(str);
   }
 
-  // Obtain vid types.
+  // Get video types
+  vid_types.open(vidtypes, ios::in);
+  if (vid_types.fail()) {
+    cout << "Unable to read vid_types file. Exiting" << endl;
+    exit(1);
+  }
+  while (vid_types) {
+    std::string str;
+    getline(vid_types, str);
+    str.erase(std::find_if(str.rbegin(), str.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), str.end());
+    if (str[0] != '.') {
+      str.insert(0, ".");
+    }
+    vid_type.push_back(str);
+  }
+
 
   //log->log_msg("File Paths :" << paths_to_files.size() << " File Types: " << image_type.size());
 
@@ -157,22 +178,19 @@ int main (int argc, char** argv) {
   }*/
 
 
-  // Index Files
-  try {
+  // Index Image Files
+  /*try {
     for ( i = 0; i < paths_to_files.size(); i++ ) {
       for ( j = 0; j < image_type.size(); j++ ) {
-
         if (boostfs::is_directory(boostfs::canonical(paths_to_files.at(i)))) {
-
           for ( boostfs::directory_iterator dir(boostfs::path(paths_to_files.at(i))), end_itr;
                 dir != end_itr;
                 dir++
               ) {
-
             if (dir->path().extension().string() == image_type.at(j)) {
-              cout << "Reading - " << dir->path().string() << endl;
               // Check that the image is in jpeg.
-              if (dir->path().extension().compare(".jpg") == 0) {
+              if (dir->path().extension().compare(".jpg") == 0 || dir->path().extension().compare(".jpeg") == 0) {
+                cout << "Input Image - " << dir->path().string() << endl;
                 imfiles.push_back(dir->path().string());
               }
               else {
@@ -181,8 +199,10 @@ int main (int argc, char** argv) {
                 vector<int> params;
                 params.push_back(CV_IMWRITE_JPEG_QUALITY);
                 params.push_back(100);
-                cout << "New File - " << dir->path().parent_path().string() + "/temp_" + dir->path().filename().string() + ".jpg" << endl;
-                imwrite(dir->path().parent_path().string() + "/temp_" + dir->path().filename().string() + ".jpg", temp, params);
+                string newname = dir->path().parent_path().string() + "/ttemp_" + dir->path().filename().string() + ".jpg";
+                cout << "Input Image - " << newname << endl;
+                imwrite(newname, temp, params);
+                imfiles.push_back(newname);
               }
 
             }
@@ -195,80 +215,164 @@ int main (int argc, char** argv) {
            << "Error Msg: " << e.code().message() << endl;
   }
 
+  cout << endl << endl;*/
+
 
   // Looking for people in images.
-
-  //sizetemp = imfiles.size(); <- imfiles : std::vector<std::string>
-  // std::vector<struct currim> imdata
-
-  Matrix<float, Dynamic, Dynamic> persondata, feat1;
-  Matrix<float, 1, Dynamic> feat;
+  Matrix<float, Dynamic, Dynamic> pdata, feat;
   boostfs::path temppath;
-  int sizetemp = imfiles.size();
-  cout << "SIZE OF IMFILES " << sizetemp << endl;
+  /*int sizetemp = imfiles.size();
   for (i = 0; i < sizetemp; i++) {
 
     temppath = imfiles[i];
-    cout << "IMAGE NAME IS " << temppath.string() << endl;
-    cout << "Entering getfeatures" << endl << endl;
-    getfeatures(temppath, thresh, scale, persondata, feat1);
+    getfeatures(temppath, thresh, scale, pdata, feat);
+    cout << "PDATA" << pdata << endl;
+    cout << "FEAT" << feat << endl;
+    cout << endl;
 
-    // assign things to currim
+    struct currim_t tempcurrim;
+    tempcurrim.feat = feat;
+    tempcurrim.det = pdata;
+    tempcurrim.path = imfiles[i];
+    tempcurrim.type = "im";
+    imdata.push_back(tempcurrim);
+  }*/
 
-    //imdata.push_back(currim);
+
+  // Index all video files.
+  try {
+    for ( i = 0; i < paths_to_files.size(); i++ ) {
+      for ( j = 0; j < vid_type.size(); j++ ) {
+        if (boostfs::is_directory(boostfs::canonical(paths_to_files.at(i)))) {
+          for ( boostfs::directory_iterator dir(boostfs::path(paths_to_files.at(i))), end_itr;
+                dir != end_itr;
+                dir++
+              ) {
+            if (dir->path().extension().string() == vid_type.at(j)) {
+              cout << "Input Video - " << dir->path().string() << endl;
+              vidfiles.push_back(dir->path().string());
+            }
+          }
+        }
+      }
+    }
+  } catch (boostfs::filesystem_error e) {
+      cout << "Error Code: " << e.code() << endl
+           << "Error Msg: " << e.code().message() << endl;
   }
 
-  cout << "Exiting loop" << endl;
+
+  // Split the video into framesCheck that the image is in jpeg.
+  //Using temporary directory. boostfs::path tempdir = boostfs::temp_directory_path(); :|
+  boostfs::path tempdir = boostfs::unique_path();
+  boostfs::create_directory(tempdir);
+  cout << "Processing Video" << endl;
+
+  std::vector<std::vector<std::string> > vidframes;
+  std::vector<std::string> tempvec;
+
+  vector<int> params;
+  params.push_back(CV_IMWRITE_JPEG_QUALITY);
+  params.push_back(100);
+  std::stringstream heckles;
+
+  // Store each frame by video as a vector of vectors.
+  for (i = 0; i < vidfiles.size(); i++) {
+
+    // the part that does the framing.
+    jake::jvVideoFrames jf;
+    jf.load(vidfiles[i]);
+
+    for (j = 0; j < jf.length() / 10; j++) {
+
+      heckles << tempdir.string() << "/heckles_" << i << "_" << j << ".jpg";
+
+      cv::imwrite(heckles.str(), jf.frame(j), params);
+
+      temppath = heckles.str();
+      tempvec.push_back(temppath.string());
+
+      heckles.str(std::string());
+      heckles.clear();
+    }
+    vidframes.push_back(tempvec);
+    tempvec.clear();
+  }
+
+  for (i = 0; i < vidframes.size(); i++) {
+    cout << vidframes[i].size() << endl;
+  }
+
+  std::vector<struct currim_t> currimvec;
+  for (i = 0; i < vidframes.size(); i++) {
+    cout << "VID FRAME SIZE " << vidframes[i].size() << endl;
+    for (j = 0; j < vidframes[i].size(); j++) {
+
+      temppath = vidframes[i].at(j);
+      cout << "Get features on " << temppath.string() << endl;
+
+      getfeatures(temppath, thresh, scale, pdata, feat);
+      cout << "PDATA" << pdata << endl;
+      cout << "FEAT" << feat << endl;
+      cout << endl;
+
+      struct currim_t tempcurrim;
+      tempcurrim.feat = feat;
+      tempcurrim.det = pdata;
+      tempcurrim.path = vidfiles[i];
+      tempcurrim.type = "vid";
+      currimvec.push_back(tempcurrim);
+      cout << "Saved data" << endl;
+    }
+    viddata.push_back(currimvec);
+  }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  /****
-  * Test Code.
-  *****/
-  /*test_image.reset(new jake::jvVideoFull());
-
-  img1.reset(new jake::jvVideoFull());
-  img2.reset(new jake::jvVideoFull());
-  img3.reset(new jake::jvVideoFull());
-
+  // Relative path does not work.
+  Matrix<float, 1, Dynamic> gt_feat;
+  test_image.reset(new jake::jvVideoFull());
   test_image->load(testim.native());
 
+  test_feature(test_image.get(), gt_feat);
 
-  img1->load("/home/vtangira/test/jake/data/wildturkey.png");
+  // Sort matches
+
+
+  /*img1->load("/home/vtangira/test/jake/data/wildturkey.png");
   img2->load("/home/vtangira/test/jake/data/yoyo.avi");
   score = hist_distance(img1.get(), img2.get(), 10, 1);
   strstream << "Score:" << score << endl;
-  log->log_msg(strstream.str());
-  strstream.str(std::string());
+  strstream.str(std::string());*/
 
-  // Relative path does not work.
-  test_feature(test_image.get(), feat);
-  strstream << "Size of feature vector is " << feat.size() << endl;
-  log->log_msg(strstream.str());
-  strstream.str(std::string());
 
-  strstream << "Feature Vector" << std::endl;
-  for (j = 0; j < feat.cols(); j++) {
-    if (j % 3 == 0 && j > 0)
-      strstream << endl;
-    strstream << feat(0, j) << " ";
+
+
+
+  // Delete Older ttemp_* files for images before exit and temp frames.
+  cout << endl << "Cleaning up." << endl;
+  boostfs::remove_all(tempdir);
+  try {
+    for ( i = 0; i < paths_to_files.size(); i++ ) {
+      for ( j = 0; j < image_type.size(); j++ ) {
+        if (boostfs::is_directory(boostfs::canonical(paths_to_files.at(i)))) {
+          for ( boostfs::directory_iterator dir(boostfs::path(paths_to_files.at(i))), end_itr;
+                dir != end_itr;
+                dir++
+              ) {
+            if (dir->path().string().find("ttemp_") != string::npos) {
+              boostfs::remove(dir->path());
+            }
+
+          }
+        }
+      }
+    }
+  } catch (boostfs::filesystem_error e) {
+      cout << "Error Code: " << e.code() << endl
+           << "Error Msg: " << e.code().message() << endl;
   }
-  log->log_msg(strstream.str());*/
+  cout << "Exit" << endl;
+
 
   return 0;
 }

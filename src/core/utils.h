@@ -474,3 +474,14 @@ int cvMatAt::At(int i, int j, int k) {
   return (channels[k].at<D>(j, i) % 256);
 
 }
+
+////////////////////////////////////////////////////////////////////////////////////
+
+// Misc
+
+struct currim_t {
+
+  Matrix<float, Dynamic, Dynamic> feat;
+  Matrix<float, Dynamic, Dynamic> det;
+  std::string path, type;
+};
