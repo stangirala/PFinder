@@ -485,3 +485,28 @@ struct currim_t {
   Matrix<float, Dynamic, Dynamic> det;
   std::string path, type;
 };
+
+
+struct score_t {
+
+  float match;
+  Matrix<float, 1, 4> box;
+  std::string path, type;
+  int frame;
+};
+
+template <typename D1, typename D2>
+float hist_distance_vec(MatrixBase<D1> hist1, MatrixBase<D2> hist2) {
+
+  int i, j;
+  Matrix<float, Dynamic, Dynamic> Diff;
+
+  Diff.resize(hist1.rows(), hist1.cols());
+  for (i = 0; i < hist1.rows(); i++) {
+    for (j = 0; j < hist1.cols(); j++) {
+      Diff(i, j) = sqrt(hist1(i, j)) - sqrt(hist2(i, j));
+    }
+  }
+
+  return Diff.norm() / sqrt(2);
+}

@@ -24,10 +24,12 @@
 #include "hist_distance.h"
 #include "test_feature.h"
 #include "getfeatures.h"
+#include "sort_match.h"
+#include "sort_matches.h"
 
 // Input order
 // Please use absolute file paths _everywhere_.
-// paths_file, im_type, vid_types, test_im, num_hist, thres, scale, fps
+// paths_file, im_type, vid_types, test_im, num_hits, thres, scale, fps
 // paths_file - Name of .txt file which has paths to the input video/image data. These
 //              are the videos and images of interest. Paths can be relative or absolute.
 // im_types - Name of .txt file which has types of images (Ex: png,jpg) which are in the paths considered.
@@ -54,7 +56,7 @@ int main (int argc, char** argv) {
   boostfs::path pathsfile, imtypes, vidtypes, testim;
   boostfs::ifstream paths, im_types, vid_types, test_im;
 
-  int num_hist, fps, i, j;
+  int num_hits, fps, i, j;
   float thresh, scale;
 
   Log *log = new Log(OFF, "cout");
@@ -64,7 +66,7 @@ int main (int argc, char** argv) {
 
   // Setup the arguments.
   if (argc < 5 || argc > 9) {
-    printf ("Incorrect Usage. Expected \"personfinder paths, im_types, vid_types, test_im[, [num_hist, [thres, [scale, [fp]]]]]\n"
+    printf ("Incorrect Usage. Expected \"personfinder paths, im_types, vid_types, test_im[, [num_hits, [thres, [scale, [fp]]]]]\n"
              "Please check the README\n");
   }
   else {
@@ -92,28 +94,28 @@ int main (int argc, char** argv) {
       exit(1);
     }
 
-    num_hist = 10;
+    num_hits = 10;
     thresh = 3.0;
     scale = 0.5;
     fps = 3;
 
     if (argc == 6) {
-      num_hist = atoi(argv[5]);
+      num_hits = atoi(argv[5]);
     }
     else if (argc == 7) {
       thresh = atoi(argv[6]);
-      num_hist = atoi(argv[5]);
+      num_hits = atoi(argv[5]);
     }
     else if (argc == 8) {
       scale = atoi(argv[7]);
       thresh = atoi(argv[6]);
-      num_hist = atoi(argv[5]);
+      num_hits = atoi(argv[5]);
     }
     else if (argc == 9) {
       fps = atoi(argv[8]);
       scale = atoi(argv[7]);
       thresh = atoi(argv[6]);
-      num_hist = atoi(argv[5]);
+      num_hits = atoi(argv[5]);
     }
   }
 
@@ -179,7 +181,7 @@ int main (int argc, char** argv) {
 
 
   // Index Image Files
-  /*try {
+  try {
     for ( i = 0; i < paths_to_files.size(); i++ ) {
       for ( j = 0; j < image_type.size(); j++ ) {
         if (boostfs::is_directory(boostfs::canonical(paths_to_files.at(i)))) {
@@ -215,13 +217,13 @@ int main (int argc, char** argv) {
            << "Error Msg: " << e.code().message() << endl;
   }
 
-  cout << endl << endl;*/
+  cout << endl << endl;
 
 
   // Looking for people in images.
   Matrix<float, Dynamic, Dynamic> pdata, feat;
   boostfs::path temppath;
-  /*int sizetemp = imfiles.size();
+  int sizetemp = imfiles.size();
   for (i = 0; i < sizetemp; i++) {
 
     temppath = imfiles[i];
@@ -236,7 +238,7 @@ int main (int argc, char** argv) {
     tempcurrim.path = imfiles[i];
     tempcurrim.type = "im";
     imdata.push_back(tempcurrim);
-  }*/
+  }
 
 
   // Index all video files.
@@ -331,20 +333,25 @@ int main (int argc, char** argv) {
   // Relative path does not work.
   Matrix<float, 1, Dynamic> gt_feat;
   test_image.reset(new jake::jvVideoFull());
-  test_image->load(testim.native());
+  test_image->load(testim.string());
+  cout << "Loading test image." << endl;
 
   test_feature(test_image.get(), gt_feat);
 
+  cout << "Extracting testin image features" << endl;
+
   // Sort matches
 
+  std::vector<struct score_t> matches;
+  sort_match(gt_feat, imdata, viddata, matches);
 
-  /*img1->load("/home/vtangira/test/jake/data/wildturkey.png");
-  img2->load("/home/vtangira/test/jake/data/yoyo.avi");
-  score = hist_distance(img1.get(), img2.get(), 10, 1);
-  strstream << "Score:" << score << endl;
-  strstream.str(std::string());*/
+  // Get top numhits from matches.
+  std::vector<struct score_t> hits;
+  sort_matches(matches, num_hits, hits);
 
 
+
+  // Do presentation stuff here.
 
 
 

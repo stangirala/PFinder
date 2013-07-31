@@ -46,17 +46,11 @@
 double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2, int bin, int type) {
 
   jake::jvColorHistogramProjection HistProj(bin, bin, bin, bin, bin, type);
-
   std::vector<std::shared_ptr<jake::jvVideoFeature>> VidFeature[2];
-
   jake::jvColorHistogramFeature *hist[2];
-
   Matrix<float, Dynamic, Dynamic> Diff;
-
   std::shared_ptr<class Log> log;
-
   log.reset(new class Log());
-
   std::stringstream strstream;
 
 
@@ -77,7 +71,7 @@ double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2, int bin, 
   for (int i = 0; i < hist[0]->v.size(); i++) {
     for (int j = 0; j < hist[0]->v[i].size(); j++) {
 
-      Diff(i, j) = hist[0]->v[i].at(j) - hist[1]->v[i].at(j);
+      Diff(i, j) = sqrt(hist[0]->v[i].at(j)) - sqrt(hist[1]->v[i].at(j));
     }
   }
 
