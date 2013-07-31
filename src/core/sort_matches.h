@@ -55,7 +55,7 @@ void sort_matches(vector<struct score_t> &match_scores,
 
   // Save into hits
   if (match_scores.size() < num_hits) {
-    cout << "Number of detects is fewer than the num_hits ranking parametre." << endl;
+    cout << "Number of detects is fewer than the num_hits ranking parameter." << endl;
     temp = match_scores.size();
   }
   else {

@@ -495,11 +495,19 @@ struct score_t {
   int frame;
 };
 
+// const ref arguments here seems to make a difference.
 template <typename D1, typename D2>
-float hist_distance_vec(MatrixBase<D1> hist1, MatrixBase<D2> hist2) {
+float hist_distance_vec(const MatrixBase<D1> &hist1, const MatrixBase<D2> &hist2) {
 
   int i, j;
   Matrix<float, Dynamic, Dynamic> Diff;
+
+  std::cout << "Calculating hist_dist_vec" << std::endl;
+
+  std::cout << "hist1 " << hist1.rows() << " " << hist1.cols() << std::endl;
+  std::cout << "hist2 " << hist2.rows() << " " << hist2.cols() << std::endl;
+
+  std::cout << "allocating size for Diff with hist1" << std::endl;
 
   Diff.resize(hist1.rows(), hist1.cols());
   for (i = 0; i < hist1.rows(); i++) {
@@ -507,6 +515,9 @@ float hist_distance_vec(MatrixBase<D1> hist1, MatrixBase<D2> hist2) {
       Diff(i, j) = sqrt(hist1(i, j)) - sqrt(hist2(i, j));
     }
   }
+
+  std::cout << "About to return, size" << Diff.rows() << " " << Diff.cols() << std::endl;
+  std::cout << "Diff norm " << Diff.norm() << std::endl;
 
   return Diff.norm() / sqrt(2);
 }

@@ -338,12 +338,14 @@ int main (int argc, char** argv) {
 
   test_feature(test_image.get(), gt_feat);
 
-  cout << "Extracting testin image features" << endl;
+  cout << "Extracting testim image features" << endl;
 
   // Sort matches
 
   std::vector<struct score_t> matches;
   sort_match(gt_feat, imdata, viddata, matches);
+
+  cout << "Getting top num hits" << endl;
 
   // Get top numhits from matches.
   std::vector<struct score_t> hits;

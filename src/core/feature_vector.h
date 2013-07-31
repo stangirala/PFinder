@@ -77,7 +77,10 @@ void feature_vector(const MatrixBase<D1> &pdata, const Mat &img, MatrixBase<D2> 
     curr(0, 3) = floor(curr(0, 3));
 
     inputframe = img(Rect(curr(0, 0), curr(0, 1), curr(0, 2), curr(0, 3)));
+    cout << "Curr "
 
+    // This needs to be checked. It does not seem to work.
+    // As in the ROI is not being extracted for histogramo computaion.
     image.reset(new jake::jvVideoFull(inputframe));
 
     projector->project(*(image.get()), imhist);
