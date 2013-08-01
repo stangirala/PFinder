@@ -44,6 +44,12 @@
 // ./_bin/personfinder /home/vtangira/Desktop/person_finder_v20130513/paths1.txt /home/vtangira/Desktop/person_finder_v20130513/imtypes.txt /home/vtangira/Desktop/person_finder_v20130513/vidtypes.txt /home/vtangira/Desktop/person_finder_v20130513/person1.png
 
 
+namespace boostfs = boost::filesystem;
+
+
+int closing_time(boostfs::path tempdir, std::vector<std::string> paths_to_files, std::vector<std::string> image_type);
+
+
 int main (int argc, char** argv) {
 
   double score;
@@ -52,7 +58,6 @@ int main (int argc, char** argv) {
   std::vector<struct currim_t> imdata;
   std::vector<std::vector<struct currim_t> > viddata;
 
-  namespace boostfs = boost::filesystem;
   boostfs::path pathsfile, imtypes, vidtypes, testim;
   boostfs::ifstream paths, im_types, vid_types, test_im;
 
@@ -356,8 +361,17 @@ int main (int argc, char** argv) {
   // Do presentation stuff here.
 
 
+  closing_time(tempdir, paths_to_files, image_type);
 
-  // Delete Older ttemp_* files for images before exit and temp frames.
+
+  return 0;
+}
+
+// Delete Older ttemp_* files for images before exit and temp frames.
+int closing_time(boostfs::path tempdir, std::vector<std::string> paths_to_files, std::vector<std::string> image_type) {
+
+  int i, j;
+
   cout << endl << "Cleaning up." << endl;
   boostfs::remove_all(tempdir);
   try {
@@ -381,7 +395,4 @@ int main (int argc, char** argv) {
            << "Error Msg: " << e.code().message() << endl;
   }
   cout << "Exit" << endl;
-
-
-  return 0;
 }
