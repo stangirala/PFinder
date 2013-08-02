@@ -28,7 +28,7 @@
 #include "sort_matches.h"
 
 // Input order
-// Please use absolute file paths _everywhere_.
+// Not using absolute paths should work. Should it not consider using them.
 // paths_file, im_type, vid_types, test_im, num_hits, thres, scale, fps
 // paths_file - Name of .txt file which has paths to the input video/image data. These
 //              are the videos and images of interest. Paths can be relative or absolute.
@@ -38,8 +38,8 @@
 // num_hits (Default : 10) - Number of top hits to be returned
 // thresh (Default : 3.0)- Threshold for person detector - Increase if the detector is finding
 //                         a lot of false positives and decrease if detector is missing a object
-// scale (Default : 0.5) - To reduce computation time of detector fps (Default : 3) - Frames per second (fps)
-//                         at which videos would be processed.
+// scale (Default : 0.5) - To reduce computation time of detector fps (Default : 10). Samples every ten frames.
+//
 // Example call
 // ./_bin/personfinder /home/vtangira/Desktop/person_finder_v20130513/paths1.txt /home/vtangira/Desktop/person_finder_v20130513/imtypes.txt /home/vtangira/Desktop/person_finder_v20130513/vidtypes.txt /home/vtangira/Desktop/person_finder_v20130513/person1.png
 
@@ -47,14 +47,12 @@
 namespace boostfs = boost::filesystem;
 
 
-int closing_time(boostfs::path tempdir, std::vector<std::string> paths_to_files, std::vector<std::string> image_type);
-
-
-int main (int argc, char** argv) {
+int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std::string> &paths_to_files, std::vector<std::string> &image_type) {
 
   double score;
   std::shared_ptr<jake::jvVideo> img1, img2, img3, test_image;
-  std::vector<std::string> paths_to_files, image_type, image_index, imfiles, vid_type, vidfiles;
+  //std::vector<std::string> paths_to_files, image_type, image_index, imfiles, vid_type, vidfiles;
+  std::vector<std::string> image_index, imfiles, vid_type, vidfiles;
   std::vector<struct currim_t> imdata;
   std::vector<std::vector<struct currim_t> > viddata;
 
@@ -102,7 +100,7 @@ int main (int argc, char** argv) {
     num_hits = 10;
     thresh = 3.0;
     scale = 0.5;
-    fps = 3;
+    fps = 10;
 
     if (argc == 6) {
       num_hits = atoi(argv[5]);
@@ -271,7 +269,8 @@ int main (int argc, char** argv) {
 
   // Split the video into framesCheck that the image is in jpeg.
   //Using temporary directory. boostfs::path tempdir = boostfs::temp_directory_path(); :|
-  boostfs::path tempdir = boostfs::unique_path();
+  //boostfs::path tempdir = boostfs::unique_path();
+  tempdir = boostfs::unique_path();
   boostfs::create_directory(tempdir);
   cout << "Processing Video" << endl;
 
@@ -290,7 +289,7 @@ int main (int argc, char** argv) {
     jake::jvVideoFrames jf;
     jf.load(vidfiles[i]);
 
-    for (j = 0; j < jf.length() / 10; j++) {
+    for (j = 0; j < jf.length() / fps; j++) {
 
       heckles << tempdir.string() << "/heckles_" << i << "_" << j << ".jpg";
 
@@ -357,13 +356,6 @@ int main (int argc, char** argv) {
   sort_matches(matches, num_hits, hits);
 
 
-
-  // Do presentation stuff here.
-
-
-  closing_time(tempdir, paths_to_files, image_type);
-
-
   return 0;
 }
 
@@ -372,15 +364,21 @@ int closing_time(boostfs::path tempdir, std::vector<std::string> paths_to_files,
 
   int i, j;
 
+
   cout << endl << "Cleaning up." << endl;
-  boostfs::remove_all(tempdir);
+
   try {
+    // For the frames.
+    if (tempdir.string().compare("") != 0) {
+      boostfs::remove_all(tempdir);
+    }
+    // For the converted files.
     for ( i = 0; i < paths_to_files.size(); i++ ) {
       for ( j = 0; j < image_type.size(); j++ ) {
         if (boostfs::is_directory(boostfs::canonical(paths_to_files.at(i)))) {
           for ( boostfs::directory_iterator dir(boostfs::path(paths_to_files.at(i))), end_itr;
-                dir != end_itr;
-                dir++
+              dir != end_itr;
+              dir++
               ) {
             if (dir->path().string().find("ttemp_") != string::npos) {
               boostfs::remove(dir->path());
@@ -393,6 +391,21 @@ int closing_time(boostfs::path tempdir, std::vector<std::string> paths_to_files,
   } catch (boostfs::filesystem_error e) {
       cout << "Error Code: " << e.code() << endl
            << "Error Msg: " << e.code().message() << endl;
-  }
+    }
+
   cout << "Exit" << endl;
+
+  return 0;
+}
+
+int main(int argc, char **argv) {
+
+  boostfs::path tempdir;
+  std::vector<std::string> paths_to_files, image_type;
+
+  personfinder(argc, argv, tempdir, paths_to_files, image_type);
+
+  closing_time(tempdir, paths_to_files, image_type);
+
+  return 0;
 }
