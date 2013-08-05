@@ -45,10 +45,14 @@ int main(int argc, char **argv) {
 
   boostfs::path tempdir;
   std::vector<std::string> paths_to_files, image_type;
+  int code;
+  std::vector<struct score_t> matches;
 
-  personfinder(argc, argv, tempdir, paths_to_files, image_type);
+  if ((code = personfinder(argc, argv, tempdir, paths_to_files, image_type, matches)) != 0)
+    cout << "Error Code - " << code;
 
-  closing_time(tempdir, paths_to_files, image_type);
+  if ((code = closing_time(tempdir, paths_to_files, image_type)) != 0)
+    cout << "Error Code - " << code;
 
   return 0;
 }

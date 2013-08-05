@@ -11,6 +11,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "utils.h"
 #include "hist_distance.h"
@@ -23,7 +24,7 @@
 namespace boostfs = boost::filesystem;
 
 
-int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std::string> &paths_to_files, std::vector<std::string> &image_type) {
+int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std::string> &paths_to_files, std::vector<std::string> &image_type, std::vector<struct score_t> &matches) {
 
   double score;
   std::shared_ptr<jake::jvVideo> img1, img2, img3, test_image;
@@ -47,30 +48,45 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
   if (argc < 5 || argc > 9) {
     printf ("Incorrect Usage. Expected \"personfinder paths, im_types, vid_types, test_im[, [num_hits, [thres, [scale, [fp]]]]]\n"
              "Please check the README\n");
+    return BADARGS;
   }
   else {
+
+    string temp(argv[1]);
+    boost::algorithm::trim(temp);
+    pathsfile = temp;
     pathsfile = argv[1];
     if( (!boostfs::exists(pathsfile)) && (!boostfs::is_regular_file(pathsfile)) ) {
+      cout << "EXISTS " << !boostfs::exists(pathsfile) << endl;
+      cout << "IS REGULAR FILE " << !boostfs::is_regular_file(pathsfile) << endl;
+      cout << "paths_file argument was: " << pathsfile << endl;
+      cout << "STRING SIZE " << strlen(argv[1]) << endl;
       cout << "paths_file argument is incorrect." << endl;
-      exit(1);
+      return PATHARG;
     }
 
+    /*temp.assign(argv[2]);
+    boost::algorithm::trim(temp);
+    imtypes = temp;*/
     imtypes = argv[2];
+    cout << "imtype revi" << argv[2] << "END"<<endl;
     if ( (!boost::filesystem::exists(imtypes)) && (!boost::filesystem::is_regular_file(imtypes)) ) {
       cout << "im_type argument is incorrect." << endl;
-      exit(1);
+      return IMTYPEARG;
     }
 
+    // TRIM
     vidtypes = argv[3];
     if ( (!boost::filesystem::exists(vidtypes)) && (!boost::filesystem::is_regular_file(vidtypes)) ) {
       cout << "vid_types argument is incorrect." << endl;
-      exit(1);
+      return VIDTYPEARG;
     }
 
+    // TRIM
     testim = argv[4];
     if (!boost::filesystem::exists(testim)) {
       cout << "test_im argument is incorrect." << endl;
-      exit(1);
+      return TESTIMARG;
     }
 
     num_hits = 10;
@@ -103,7 +119,7 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
   paths.open(pathsfile);
   if (paths.fail()) {
     cout << "Unable to paths file. Exiting" << endl;
-    exit(1);
+    return PATHARG;
   }
   while (paths) {
     std::string str;
@@ -119,7 +135,7 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
   im_types.open(imtypes);
   if (im_types.fail()) {
     cout << "Unable to read im_types file. Exiting" << endl;
-    exit(1);
+    return IMTYPEARG;
   }
   while (im_types) {
     std::string str;
@@ -135,7 +151,7 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
   vid_types.open(vidtypes, ios::in);
   if (vid_types.fail()) {
     cout << "Unable to read vid_types file. Exiting" << endl;
-    exit(1);
+    return VIDTYPEARG;
   }
   while (vid_types) {
     std::string str;
@@ -194,6 +210,7 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
   } catch (boostfs::filesystem_error e) {
       cout << "Error Code: " << e.code() << endl
            << "Error Msg: " << e.code().message() << endl;
+           return INDEXIMG;
   }
 
   cout << endl << endl;
@@ -240,6 +257,7 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
   } catch (boostfs::filesystem_error e) {
       cout << "Error Code: " << e.code() << endl
            << "Error Msg: " << e.code().message() << endl;
+           return INDEXVID;
   }
 
 
@@ -258,12 +276,16 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
   params.push_back(100);
   std::stringstream heckles;
 
+  cout << "Creating stream heckles" << endl;
+
   // Store each frame by video as a vector of vectors.
   for (i = 0; i < vidfiles.size(); i++) {
 
     // the part that does the framing.
+    cout << "About to load" << endl;
     jake::jvVideoFrames jf;
     jf.load(vidfiles[i]);
+    cout << "Done load" << endl;
 
     for (j = 0; j < jf.length() / fps; j++) {
 
@@ -321,8 +343,7 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
   cout << "Extracting testim image features" << endl;
 
   // Sort matches
-
-  std::vector<struct score_t> matches;
+  //std::vector<struct score_t> matches;
   sort_match(gt_feat, imdata, viddata, matches);
 
   cout << "Getting top num hits" << endl;
@@ -340,8 +361,6 @@ int closing_time(boostfs::path tempdir, std::vector<std::string> paths_to_files,
 
   int i, j;
 
-
-  cout << endl << "Cleaning up." << endl;
 
   try {
     // For the frames.
@@ -367,9 +386,10 @@ int closing_time(boostfs::path tempdir, std::vector<std::string> paths_to_files,
   } catch (boostfs::filesystem_error e) {
       cout << "Error Code: " << e.code() << endl
            << "Error Msg: " << e.code().message() << endl;
+           return CLEANUP;
     }
 
-  cout << "Exit" << endl;
+  cout << endl << "Cleaning up." << endl;
 
   return 0;
 }

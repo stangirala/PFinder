@@ -27,7 +27,6 @@
 
 #include "sort_matches.h"
 
-#pragma once
 
 /** \file sort_matches.cpp
     \brief
