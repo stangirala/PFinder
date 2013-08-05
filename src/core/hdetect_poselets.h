@@ -54,11 +54,6 @@ void append_hit(const D &oh, vector<D> &hits) {
   hits.push_back(oh);
 }
 
-bool file_exists(string filename) {
-
-  ifstream testfile(filename.c_str());
-  return !testfile;
-}
 
 template <typename D>
 void hdetect_poselets(boost::filesystem::path image, float thresh, float scale, MatrixBase<D> &persondata) {
@@ -69,11 +64,11 @@ void hdetect_poselets(boost::filesystem::path image, float thresh, float scale, 
   vector<PoseletHit> poselet_hits;
   bgr8_image_t img;
 
-
   faster_detection = "false";
   enable_bigq = "true";
 
-  if (file_exists(image.string())) {
+  ifstream testfile(image.string().c_str());
+  if (!testfile) {
     cout << "Cannot open file - " <<  image.string() << endl
          << "Exiting" << endl;
     exit(0);

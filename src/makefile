@@ -5,13 +5,13 @@ PROJ_PATH := $(shell pwd)/..
 
 # library source files --------------------
 
-CORE_LIBFILES = utilsconfig.cpp hist_distance.cpp test_feature.cpp 
+CORE_LIBFILES = hist_distance.cpp test_feature.cpp sort_matches.cpp personfinder.cpp utilsconfig.cpp 
 CORE_LIB      = libPROJcore.a
 
 
 # application source files --------------------
 
-APPFILES = personfinder.cpp
+APPFILES = pfinder.cpp
 
 # intermediate and final build locations ------
 BIN_DIR  = $(PROJ_PATH)/_bin
@@ -47,7 +47,7 @@ make_dirs:
 	for subdir in $(PROJ_SRC_DIRS); do mkdir -p $(TEMP_DIR)/$$subdir; done
 
 $(BIN_DIR)/$(CORE_LIB):	$(CORE_LIBOBJS)
-	ar rcs $@ $(CORE_LIBOBJS)
+	ar scr $@ $(CORE_LIBOBJS)
 
 # app rules: should be after the explicit library rule above -----------
 $(BIN_DIR)/% : ${TEMP_DIR}/apps/%.o $(PROJ_LIBS)
@@ -63,13 +63,13 @@ endef
 
 
 clean:
-	-rm $(PROJ_LIBS)
-	-rm $(LIBOBJS)
-	-rm $(PROJ_APPS)
-	-rm $(APPOBJS)
-	-rm $(DEPS)
+	-rm -f $(PROJ_LIBS)
+	-rm -f $(LIBOBJS)
+	-rm -f $(PROJ_APPS)
+	-rm -f $(APPOBJS)
+	-rm -f $(DEPS)
 	-for subdir in $(PROJ_SRC_DIRS); do rmdir $(TEMP_DIR)/$$subdir; done
 	-rmdir $(TEMP_DIR)
-	-rmdir -rf $(BIN_DIR)
+	-rmdir $(BIN_DIR)
 
 -include $(DEPS)

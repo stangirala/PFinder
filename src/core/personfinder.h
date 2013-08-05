@@ -17,6 +17,8 @@
 namespace boostfs = boost::filesystem;
 
 
+extern "C" {
 int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std::string> &paths_to_files, std::vector<std::string> &image_type);
 
 int closing_time(boostfs::path tempdir, std::vector<std::string> paths_to_files, std::vector<std::string> image_type);
+}
