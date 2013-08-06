@@ -509,5 +509,5 @@ float hist_distance_vec(const MatrixBase<D1> &hist1, const MatrixBase<D2> &hist2
     }
   }
 
-  return 1 - (Diff.norm() / sqrt(2));
+  return (Diff.norm() / sqrt(2));
 }

@@ -51,7 +51,6 @@ void feature_vector(const MatrixBase<D1> &pdata, const Mat &img, MatrixBase<D2> 
   Matrix<float, Dynamic, Dynamic> curr;
   jake::jvColorHistogramProjection *projector;
   shared_ptr<jake::jvVideoFull> image;
-  vector<shared_ptr<jake::jvVideoFeature> > imhist;
   jake::jvColorHistogramFeature *hist;
   jake::jvMat3D temp;
   Mat inputframe;
@@ -84,18 +83,20 @@ void feature_vector(const MatrixBase<D1> &pdata, const Mat &img, MatrixBase<D2> 
 
     cout << "Rows Cols of curr " << curr.rows() << " " << curr.cols() << endl;
     cout << "input frame" << endl;
-    inputframe = img(Rect(curr(0, i*4 + 0), curr(0, i*4 + 1), curr(0, i*4 + 2), curr(0, i*4 + 3)));
-    cout << "CURR IN FEATURE VECTOR "
+    cout << "ROI CURR IN FEATURE VECTOR "
          << curr(0, i*4 + 0) << " "
          << curr(0, i*4 + 1) << " "
          << curr(0, i*4 + 2) << " "
          << curr(0, i*4 + 3) << endl;
+    cout << "Image size r, c " << img.rows << " " << img.cols << endl;
+    inputframe = img(Rect(curr(0, i*4 + 0), curr(0, i*4 + 1), curr(0, i*4 + 3), curr(0, i*4 + 2)));
     cout << "CROP IN FEATURE VECTOR " << inputframe.rows << " " << inputframe.cols << endl;
 
     // This needs to be checked. It does not seem to work.
     // As in the ROI is not being extracted for histogramo computaion.
     image.reset(new jake::jvVideoFull(inputframe));
 
+    vector<shared_ptr<jake::jvVideoFeature> > imhist;
     projector->project(*(image.get()), imhist);
 
     // Collect Histogram
