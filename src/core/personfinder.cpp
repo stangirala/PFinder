@@ -284,7 +284,11 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
     // the part that does the framing.
     cout << "About to load" << endl;
     jake::jvVideoFrames jf;
-    jf.load(vidfiles[i]);
+    try {
+      jf.load(vidfiles[i]);
+    }catch (cv::Exception &e) {
+      cout << "jvframes exception " << e.what() << endl;
+    }
     cout << "Done load" << endl;
 
     for (j = 0; j < jf.length() / fps; j++) {
@@ -352,6 +356,26 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
   std::vector<struct score_t> hits;
   sort_matches(matches, num_hits, hits);
 
+  try {
+  cv::namedWindow("Display Window", CV_WINDOW_AUTOSIZE);
+
+  // Mark them bouding boxes
+  int lim;
+  if (num_hits > matches.size())
+    lim = matches.size();
+  else
+    lim = num_hits;
+  for (i = 0; i < lim; i++) {
+    cv::Mat tempimg = cv::imread(matches[i].path, -1);
+    cv::rectangle(tempimg, cv::Point(matches[i].box(0, 0), matches[i].box(0, 1)), 
+  cv::Point(matches[i].box(0, 0) + matches[i].box(0, 2), matches[i].box(0, 1) + matches[i].box(0, 3)),
+  cv::Scalar(0,0,255));
+  cv::imshow("Display Window", tempimg);
+  waitKey(0);
+  }
+  } catch (cv::Exception &e) {
+    cout << "personfinder opencv - " << e.what() << endl;
+  }
 
   return 0;
 }
