@@ -63,7 +63,7 @@ void sort_matches(vector<struct score_t> &match_scores,
   }
 
   for (int i = 0; i < temp; i++) {
-    cout << "Detection" << match_scores[i].path << " " << match_scores[i].type << endl
+    cout << "Detection " << match_scores[i].match << " " << match_scores[i].path << " " << match_scores[i].type << endl
          << match_scores[i].box << endl;
   }
 
