@@ -1,0 +1,11 @@
+// Core.
+#include "../src/core/feature_vector.h"
+#include "../src/core/fusedetections.h"
+#include "../src/core/getfeatures.h"
+#include "../src/core/hdetect_poselets.h"
+#include "../src/core/hist_distance.h"
+#include "../src/core/sort_matches.h"
+#include "../src/core/sort_match.h"
+#include "../src/core/test_feature.h"
+#include "../src/core/utils.h"
+#include "../src/core/personfinder.h"

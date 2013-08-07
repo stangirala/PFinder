@@ -5,3 +5,10 @@
 /_bin
 tags
 *.swp
+*.swo
+personfinder.config
+personfinder.creator
+personfinder.creator.user
+personfinder.files
+personfinder.includes
+
