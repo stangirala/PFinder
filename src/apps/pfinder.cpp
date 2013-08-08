@@ -51,8 +51,8 @@ int main(int argc, char **argv) {
   if ((code = personfinder(argc, argv, tempdir, paths_to_files, image_type, matches)) != 0)
     cout << "Error Code - " << code;
 
-  if ((code = closing_time(tempdir, paths_to_files, image_type)) != 0)
-    cout << "Error Code - " << code;
+  /*if ((code = closing_time(tempdir, paths_to_files, image_type)) != 0)
+    cout << "Error Code - " << code;*/
 
   return 0;
 }

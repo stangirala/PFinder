@@ -103,7 +103,4 @@ void sort_match(const MatrixBase<D> &gt_feat,
 
   cout << "done sorting video files" << endl;
 
-
-
-
 }

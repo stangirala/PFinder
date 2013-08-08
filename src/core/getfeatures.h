@@ -174,7 +174,8 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
 
     cout << "Setting up feature vector" << endl;
     cout << "PDATA BEING SENT TO FEATURE_VECTOR " << persondata.rows() << " " << persondata.cols ()
-          << endl << persondata << endl;
+          << endl << persondata << endl
+          << "image path being read " << impath.string() << endl;
     feature_vector(persondata, img, feat);
     cout << "Done setting up feature vector" << endl;
   }

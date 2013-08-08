@@ -295,7 +295,9 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
 
       heckles << tempdir.string() << "/heckles_" << i << "_" << j << ".jpg";
 
-      cv::imwrite(heckles.str(), jf.frame(j), params);
+      cout << "FILE NAME " << heckles.str() << endl;
+
+      cv::imwrite(heckles.str(), jf.frame(j * fps), params);
 
       temppath = heckles.str();
       tempvec.push_back(temppath.string());
@@ -327,7 +329,7 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
       struct currim_t tempcurrim;
       tempcurrim.feat = feat;
       tempcurrim.det = pdata;
-      tempcurrim.path = vidfiles[i];
+      tempcurrim.path = temppath.string();
       tempcurrim.type = "vid";
       currimvec.push_back(tempcurrim);
       cout << "Saved data" << endl;
@@ -357,22 +359,28 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
   sort_matches(matches, num_hits, hits);
 
   try {
-  cv::namedWindow("Display Window", CV_WINDOW_AUTOSIZE);
+    cv::namedWindow("Display Window", CV_WINDOW_AUTOSIZE);
 
-  // Mark them bouding boxes
-  int lim;
-  if (num_hits > matches.size())
-    lim = matches.size();
-  else
-    lim = num_hits;
-  for (i = 0; i < lim; i++) {
-    cv::Mat tempimg = cv::imread(matches[i].path, -1);
-    cv::rectangle(tempimg, cv::Point(matches[i].box(0, 0), matches[i].box(0, 1)), 
-  cv::Point(matches[i].box(0, 0) + matches[i].box(0, 2), matches[i].box(0, 1) + matches[i].box(0, 3)),
-  cv::Scalar(0,0,255));
-  cv::imshow("Display Window", tempimg);
-  waitKey(0);
-  }
+    // Mark them bouding boxes
+
+    int lim;
+    if (num_hits > matches.size())
+      lim = matches.size();
+    else
+      lim = num_hits;
+
+    for (i = 0; i < lim; i++) {
+      cv::Mat tempimg = cv::imread(matches[i].path, -1);
+      if (tempimg.data == NULL) {
+        cout << "Unable to read " << matches[i].path << endl;
+        continue;
+      }
+      cv::rectangle(tempimg, cv::Point(matches[i].box(0, 0), matches[i].box(0, 1)), 
+          cv::Point(matches[i].box(0, 0) + matches[i].box(0, 2), matches[i].box(0, 1) + matches[i].box(0, 3)),
+          cv::Scalar(0,0,255));
+      cv::imshow("Display Window", tempimg);
+      waitKey(0);
+    }
   } catch (cv::Exception &e) {
     cout << "personfinder opencv - " << e.what() << endl;
   }
