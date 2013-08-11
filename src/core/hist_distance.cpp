@@ -77,5 +77,5 @@ double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2, int bin, 
 
   log->log_msg("Done with histogram calculation");
 
-  return (1 - (Diff.norm())/sqrt(2));
+  return ((Diff.norm())/sqrt(2));
 }

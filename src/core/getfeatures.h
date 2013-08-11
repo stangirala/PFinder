@@ -94,6 +94,7 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
       cout << "MODIFIED CURRENT BOX" << endl << modifiedcurrentbox << endl;
       cout << "SIZE " << modifiedcurrentbox.rows() << " " << modifiedcurrentbox.cols() << endl;
       modifiedcurrentbox.transposeInPlace();
+      cout << modifiedcurrentbox << endl << endl;
 
 
       cout << "rectint" << endl;
@@ -118,8 +119,11 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
 
 
       Matrix<float, Dynamic, Dynamic> temp1, temp2;
-      cout << "AREAVEC SIZE " << areavec.rows() << " " << areavec.cols() << endl;
       cout << "AREAMAT SIZE " << areamat.rows() << " " << areamat.cols() << endl;
+      cout << areamat << endl << endl;
+      cout << "AREAVEC SIZE " << areavec.rows() << " " << areavec.cols() << endl;
+      cout << areavec << endl << endl;
+
       repmat(areavec, areamat.rows(), 1, temp1);
       cout << "FIRST REPMAT. SIZE " << temp1.rows() << " "  << temp1.cols() << endl;
       areavec.transposeInPlace();
@@ -131,15 +135,17 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
       areasum = temp1 + temp2;
 
       cout << "areasum" << endl;
+      cout << areasum << endl << endl;
 
       pascalratiomat.resize(areasum.rows(), areasum.cols());
       for (i = 0; i < areasum.rows(); i++) {
         for (j = 0; j < areasum.cols(); j++) {
-          pascalratiomat(i, j) = areasum(i, j) / (areasum(i, j) - areamat(i, j));
+          pascalratiomat(i, j) = static_cast<float>(areasum(i, j)) / (areasum(i, j) - areamat(i, j));
         }
       }
 
       cout << "pascal ration" << endl;
+      cout << pascalratiomat << endl << endl;
 
       Matrix<float, Dynamic, Dynamic> temp;
       // Triangular view one above the central diagonal.
@@ -153,22 +159,25 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
           }
         }
       }
-      r.resize(1, r.size());
-      c.resize(1, c.size());
+      r.resize(1, vr.size());
+      c.resize(1, vc.size());
       for (i = 0; i < r.cols(); i++) {
-        r(1, i) = vr[i]; c(1, i) = vc[i];
+        r(0, i) = vr[i]; c(0, i) = vc[i];
       }
 
       cout << "the r matrix" << endl;
+      cout << r << endl << endl << c << endl << endl;
+
+      cout << "BEFORE FUSE DETECTIONS" << endl;
 
       if (r.cols() != 0) {
         Matrix<float, 1, Dynamic> framedet;
+        cout << "GET FEATURES _ ABOUT TO FUSE" << endl;
         fusedetections(r, c, persondata, framedet);
+        cout << "SAVING INTO PERSONFINDER" << endl;
         persondata = framedet;
       }
     }
-
-    cout << "fuse this shit" << endl;
 
     // Setup Bounds checking here.
 

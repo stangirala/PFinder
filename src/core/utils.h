@@ -411,14 +411,26 @@ void reshape(const MatrixBase<D1> &inp, int r, int c, MatrixBase<D2> &out) {
   int i, j, k, l;
 
 
-  k = 0; l = 0;
+  /*k = 0; l = 0;
   for (i = 0; i < r; i++) {
     for (j = 0; j < c; j++) {
       out(j, i) = inp(l, k);
 
       if (l == inp.rows()) {l = 0; k++;} else l++;
     }
-  }
+  }*/
+
+  if (r*c != inp.rows()*inp.cols())
+    std::cout << "Unable to Reshape" << std::endl;
+
+  k = 0; l = 0;
+  for (j = 0; j < c; j++)
+    for (i = 0; i < r; i++) {
+      if(l == inp.rows()) {l = 0; k++;}
+      out(i, j) = inp(l, k);
+      l++;
+    }
+
 
   return;
 }

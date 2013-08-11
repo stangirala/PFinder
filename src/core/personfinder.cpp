@@ -195,7 +195,7 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
                 Mat temp = imread(dir->path().string(), CV_LOAD_IMAGE_COLOR);
                 vector<int> params;
                 params.push_back(CV_IMWRITE_JPEG_QUALITY);
-                params.push_back(100);
+                params.push_back(90);
                 string newname = dir->path().parent_path().string() + "/ttemp_" + dir->path().filename().string() + ".jpg";
                 cout << "Input Image - " << newname << endl;
                 imwrite(newname, temp, params);
@@ -273,7 +273,7 @@ int personfinder (int argc, char **argv, boostfs::path &tempdir, std::vector<std
 
   vector<int> params;
   params.push_back(CV_IMWRITE_JPEG_QUALITY);
-  params.push_back(100);
+  params.push_back(90);
   std::stringstream heckles;
 
   cout << "Creating stream heckles" << endl;

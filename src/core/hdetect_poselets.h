@@ -97,6 +97,8 @@ void hdetect_poselets(boost::filesystem::path image, float thresh, float scale, 
     img.width(), img.height(), const_view(img).pixels().row_size(),
     Image::k8Bit, Image::kRGB, interleaved_view_get_raw_data(const_view(img)));
 
+  cout << "IMAGE DATA IN HDETECT POSELETS " << img.width() << " " << img.height() << endl;
+
 
   cout << "Running Detector on Input - " << image.string() << endl;
 
@@ -108,13 +110,23 @@ void hdetect_poselets(boost::filesystem::path image, float thresh, float scale, 
   // Filter prediction on threshold and return persondata.
   //cout << "DETECTED POSELETS" << endl;
   for (i = 0; i < object_hits.size(); i++) {
-      /*cout << "Found poselet: "
+      cout << "Found poselet: "
       << object_hits[i].x0 << " "
       << object_hits[i].y0 << " "
       << object_hits[i].width << " "
       << object_hits[i].height << " "
-      << object_hits[i].score << endl;*/
+      << object_hits[i].score << endl;
+    //cout << "FILTERING CRITERIA SCORE " << object_hits[i].score << endl;
     if (object_hits[i].score > thresh) {
+      //cout << "PASSED CRITERIA" << endl;
+      // Check image bounds here.
+      if ( !( object_hits[i].x0 + object_hits[i].width <= img.width() &&
+            object_hits[i].y0 + object_hits[i].height <= img.height() )
+         ) {
+        //cout << "PASSED IMAGE BOUNDS" << endl;
+        object_hits[i].width = img.width() - object_hits[i].x0 - 1;
+        object_hits[i].height = img.height() - object_hits[i].y0 - 1;
+      }
       filter.push_back(object_hits[i]);
     }
   }
@@ -122,11 +134,15 @@ void hdetect_poselets(boost::filesystem::path image, float thresh, float scale, 
 
   cout << "Filtering Detections." << endl;
 
+  cout << "DETECTIONS ARE - " << endl;
+  for (vector<ObjectHit>::iterator itr = filter.begin(); itr != filter.end(); itr++)
+    cout << "SCORE " << itr->score << endl;
+
   if (filter.size() > 0) {
 
     persondata.derived().resize(1, filter.size() * 4);
     int index = 0;
-    scale = 1;
+    //scale = 2;
     for (j = 0; j < filter.size(); j++) {
       persondata(0, index + 0) = filter[j].x0 / scale;
       persondata(0, index + 1) = filter[j].y0 / scale;

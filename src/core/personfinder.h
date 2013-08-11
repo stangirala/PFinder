@@ -6,7 +6,7 @@
 #include <ostream>
 #include <iostream>
 
-#include <drwnBase.h>
+//#include <drwnBase.h>
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>

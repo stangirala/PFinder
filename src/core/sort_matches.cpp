@@ -40,7 +40,6 @@ using namespace::Eigen;
 using namespace::std;
 
 bool comparer (struct score_t a, struct score_t b) {
-
   return a.match>b.match?true:false;
 }
 
@@ -50,8 +49,17 @@ void sort_matches(vector<struct score_t> &match_scores,
 
   int temp;
 
+  cout << "THING BEFORE SORTING IN SORT_MATCHES" << endl;
+  for (vector<struct score_t>::iterator itr = hits.begin(); itr != hits.end(); itr++)
+    cout << " " << itr->match << " " << itr->path << endl;
+
 
   std::sort(match_scores.begin(), match_scores.end(), comparer);
+
+  cout << "THE SORTING HAS BEEN DONE " << endl << endl;
+  for (vector<struct score_t>::iterator itr = match_scores.begin(); itr != match_scores.end(); itr++)
+    cout << itr->match << " ";
+  cout << endl << endl;
 
   // Save into hits
   if (match_scores.size() < num_hits) {

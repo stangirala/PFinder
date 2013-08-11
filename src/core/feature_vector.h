@@ -84,8 +84,13 @@ void feature_vector(const MatrixBase<D1> &pdata, const Mat &img, MatrixBase<D2> 
          << curr(0, i*4 + 3) << endl;
     cout << "Image size r, c " << img.rows << " " << img.cols << endl;
 
+    cout << endl << endl << "BOUNDS" << endl << endl;
+    cout << curr(0, i*4 + 0) << " " << curr(0, i*4 + 1) << " "
+         << curr(0, i*4 + 0) + curr(0, i*4 + 2) << " " << curr(0, i*4 + 1) + curr(0, i*4 + 3) << endl << endl;
 
-    inputframe = img(Rect(curr(0, i*4 + 0), curr(0, i*4 + 1), curr(0, i*4 + 3), curr(0, i*4 + 2)));
+
+    //inputframe = img(Rect(curr(0, i*4 + 0), curr(0, i*4 + 1), curr(0, i*4 + 2), curr(0, i*4 + 3)));
+    inputframe = img(Rect(curr(0, i*4 + 0), curr(0, i*4 + 1), curr(0, i*4 + 2), curr(0, i*4 + 3)));
     cout << "CROP IN FEATURE VECTOR " << inputframe.rows << " " << inputframe.cols << endl;
 
     image.reset(new jake::jvVideoFull(inputframe));
@@ -98,27 +103,33 @@ void feature_vector(const MatrixBase<D1> &pdata, const Mat &img, MatrixBase<D2> 
     // Normalize and collect histogram for each channel.
     sum = 1;
     for (l = 0; l < n/3; l++) {
+      cout << hist->v[0].at(l) << " ";
       sum += hist->v[0].at(l);
     }
     for (l = 0; l < n/3; l++) {
       feat(i, l) = hist->v[0].at(l) / sum;
     }
+    cout << endl;
 
     sum = 1;
     for (l = 0; l < n/3; l++) {
+      cout << hist->v[1].at(l) << " ";
       sum += hist->v[1].at(l);
     }
     for (l = 0; l < n/3; l++) {
       feat(i, l + n/3) = hist->v[1].at(l) / sum;
     }
+    cout << endl;
 
     sum = 1;
     for (l = 0; l < n/3; l++) {
+      cout << hist->v[2].at(l) << " ";
       sum += hist->v[2].at(l);
     }
     for (l = 0; l < n/3; l++) {
       feat(i, l + 2*n/3) = hist->v[2].at(l) / sum;
     }
+    cout << endl;
   }
 
   cout << "feat in feature_vector " << endl;

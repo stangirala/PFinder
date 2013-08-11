@@ -59,12 +59,9 @@ void sort_match(const MatrixBase<D> &gt_feat,
 
       h = imdata[i].feat.row(j);
 
-      cout << "SORT MATCH Sizes being sent in " << gt_feat.rows() << " " << gt_feat.cols() << endl;
-      cout << "SORT MATCH Sizes being sent in " << h.rows() << " " << h.cols() << endl;
+      cout << "IMAGE Item being matched in sort_match ---- " << imdata[i].path << endl;
       temp.match = hist_distance_vec(gt_feat, imdata[i].feat.row(j));
-      cout << "Returned" << endl;
-
-      cout << "imdata det size " << imdata[i].det.rows() << " " << imdata[i].det.cols() << endl;
+      cout << "SCORE: " << temp.match << endl;
 
       temp.box(0, 0) = imdata[i].det(0, j*4);
       temp.box(0, 1) = imdata[i].det(0, j*4 + 1);
@@ -85,7 +82,9 @@ void sort_match(const MatrixBase<D> &gt_feat,
     for (j = 0; j < vid_entire_data[i].size(); j++) {
       for (k = 0; k < vid_entire_data[i].at(j).det.cols() / 4; k++) {
 
+        cout << "Video Item being matched in sort_match ---- " << imdata[i].path << endl;
         temp.match = hist_distance_vec(gt_feat, vid_entire_data[i].at(j).feat.row(k));
+        cout << "SCORE: " << temp.match << endl;
 
         temp.box(0, 0) = vid_entire_data[i].at(j).det(0, k*4);
         temp.box(0, 1) = vid_entire_data[i].at(j).det(0, k*4 + 1);
