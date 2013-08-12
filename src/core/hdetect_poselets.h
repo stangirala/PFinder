@@ -142,7 +142,6 @@ void hdetect_poselets(boost::filesystem::path image, float thresh, float scale, 
 
     persondata.derived().resize(1, filter.size() * 4);
     int index = 0;
-    //scale = 2;
     for (j = 0; j < filter.size(); j++) {
       persondata(0, index + 0) = filter[j].x0 / scale;
       persondata(0, index + 1) = filter[j].y0 / scale;

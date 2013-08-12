@@ -61,6 +61,8 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
 
   // Load the image.
   img = imread(impath.string(), CV_LOAD_IMAGE_COLOR);
+  cout << "GETFEATURES IMG MAT " << img.step[0]<< " "<<img.step[1] << " " <<img.step[2] << endl;
+  cout << "ROW COLS " << img.rows << " " << img.cols << endl;
   if (!img.data) {
     cout << "Unable to open " << impath.string() << endl;
   }
@@ -73,8 +75,6 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
   cout << "Detecting Poselets " << endl;
   hdetect_poselets(impath, thresh, scale, persondata);
   cout << "Done detecting Poselets" << endl;
-
-  areafracthresh = 0.4;
 
   // Identify a region as a person using the poselet.
   cout << "persondata cols and rows " << persondata.cols() << persondata.rows() << endl;
@@ -147,6 +147,7 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
       cout << "pascal ration" << endl;
       cout << pascalratiomat << endl << endl;
 
+      areafracthresh = 1.0;
       Matrix<float, Dynamic, Dynamic> temp;
       // Triangular view one above the central diagonal.
       // Ugh. No bound checking.
@@ -177,6 +178,13 @@ void getfeatures(boost::filesystem::path impath, float thresh, float scale, Matr
         cout << "SAVING INTO PERSONFINDER" << endl;
         persondata = framedet;
       }
+      /*else {
+        persondata.derived().resize(1, 4);
+        persondata(0, 0) = 0;
+        persondata(0, 1) = 0;
+        persondata(0, 2) = 0;
+        persondata(0, 3) = 0;
+      }*/
     }
 
     // Setup Bounds checking here.

@@ -59,7 +59,10 @@ void feature_vector(const MatrixBase<D1> &pdata, const Mat &img, MatrixBase<D2> 
 
   n = 30;
 
+  //projector = new jake::jvColorHistogramProjection(n/3 - 1, n/3 - 1, n/3 - 1, n/3 - 1, n/3 - 1, 1);
+  cout << "TRYING TO PROJECT" << endl;
   projector = new jake::jvColorHistogramProjection(n/3, n/3, n/3, n/3, n/3, 1);
+  //projector = new jake::jvColorHistogramProjection(10, 10, 10, 10, 10, 1);
 
   feat.derived().resize(pdata.cols() / 4, n);
   feat = Matrix<float, Dynamic, Dynamic>::Zero(pdata.cols() / 4, n);
@@ -126,7 +129,7 @@ void feature_vector(const MatrixBase<D1> &pdata, const Mat &img, MatrixBase<D2> 
       cout << hist->v[2].at(l) << " ";
       sum += hist->v[2].at(l);
     }
-    for (l = 0; l < n/3; l++) {
+    for (l = 0; l < n/3 - 1; l++) {
       feat(i, l + 2*n/3) = hist->v[2].at(l) / sum;
     }
     cout << endl;

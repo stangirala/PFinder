@@ -514,6 +514,14 @@ float hist_distance_vec(const MatrixBase<D1> &hist1, const MatrixBase<D2> &hist2
   int i, j;
   Matrix<float, Dynamic, Dynamic> Diff;
 
+  // Check if a point box is unfairly give a high rank.
+  /*for (i = 0; i < hist2.cols(); i++) {
+    if (hist2(0, i) == 0)
+      return;
+    else
+      break;
+  }*/
+
   Diff.resize(hist1.rows(), hist1.cols());
   for (i = 0; i < hist1.rows(); i++) {
     for (j = 0; j < hist1.cols(); j++) {

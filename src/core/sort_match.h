@@ -82,7 +82,7 @@ void sort_match(const MatrixBase<D> &gt_feat,
     for (j = 0; j < vid_entire_data[i].size(); j++) {
       for (k = 0; k < vid_entire_data[i].at(j).det.cols() / 4; k++) {
 
-        cout << "Video Item being matched in sort_match ---- " << imdata[i].path << endl;
+        cout << "Video Item being matched in sort_match ---- " << vid_entire_data[i].at(j).path << endl;
         temp.match = hist_distance_vec(gt_feat, vid_entire_data[i].at(j).feat.row(k));
         cout << "SCORE: " << temp.match << endl;
 
