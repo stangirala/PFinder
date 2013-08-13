@@ -67,7 +67,8 @@ double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2, int bin, 
        << " 1st Bin Size: " << hist[0]->v[0].size() << endl;
   log->log_msg(strstream.str());
 
-  Diff.resize(hist[0]->v.size(), hist[0]->v[0].size());
+
+  /*Diff.resize(hist[0]->v.size(), hist[0]->v[0].size());
   for (int i = 0; i < hist[0]->v.size(); i++) {
     for (int j = 0; j < hist[0]->v[i].size(); j++) {
 
@@ -77,5 +78,14 @@ double hist_distance(jake::jvVideo *VidHist1, jake::jvVideo *VidHist2, int bin, 
 
   log->log_msg("Done with histogram calculation");
 
-  return ((Diff.norm())/sqrt(2));
+  return (1 - (Diff.norm())/sqrt(2));*/
+
+  float sum = 0;
+  for (int i = 0; i < hist[0]->v.size(); i++) {
+    for (int j = 0; j < hist[0]->v[i].size(); j++) {
+      sum += sqrt(hist[0]->v[i].at(j)) - sqrt(hist[1]->v[i].at(j));
+    }
+  }
+
+  return (sqrt(sum)/sqrt(2));
 }

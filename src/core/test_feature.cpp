@@ -80,5 +80,7 @@ void test_feature(jake::jvVideo *InputFrame, Matrix<float, 1, Dynamic> &feat) {
 
     featindex += Histogram->v[i].size();
   }
+
+  std::cout << "TESTIMAGE FEATURES " << std::endl << feat << std::endl << std::endl;
   log->log_msg ("Done calculating test features.");
 }

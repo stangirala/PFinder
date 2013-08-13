@@ -522,12 +522,21 @@ float hist_distance_vec(const MatrixBase<D1> &hist1, const MatrixBase<D2> &hist2
       break;
   }*/
 
-  Diff.resize(hist1.rows(), hist1.cols());
+  /*Diff.resize(hist1.rows(), hist1.cols());
   for (i = 0; i < hist1.rows(); i++) {
     for (j = 0; j < hist1.cols(); j++) {
       Diff(i, j) = sqrt(hist1(i, j)) - sqrt(hist2(i, j));
     }
   }
 
-  return (Diff.norm() / sqrt(2));
+  return 1 - (Diff.norm() / sqrt(2));*/
+
+  float sum = 0;
+  for (i = 0; i < hist1.rows(); i++) {
+    for (j = 0; j < hist1.cols(); j++) {
+      sum += sqrt(hist1(i, j)) - sqrt(hist2(i, j));
+    }
+  }
+
+  return  (sqrt(sum) / sqrt(2));
 }

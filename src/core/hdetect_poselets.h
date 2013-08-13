@@ -93,6 +93,8 @@ void hdetect_poselets(boost::filesystem::path image, float thresh, float scale, 
     cout << "Failed to load model to detect Humans." << endl;
   }
 
+  cout << "IMAGE SIZE IN hdetect poselets " << img.width() << " " << img.height() << endl;
+
   Image img_proxy (
     img.width(), img.height(), const_view(img).pixels().row_size(),
     Image::k8Bit, Image::kRGB, interleaved_view_get_raw_data(const_view(img)));
@@ -120,14 +122,19 @@ void hdetect_poselets(boost::filesystem::path image, float thresh, float scale, 
     if (object_hits[i].score > thresh) {
       //cout << "PASSED CRITERIA" << endl;
       // Check image bounds here.
-      if ( !( object_hits[i].x0 + object_hits[i].width <= img.width() &&
+      /*if ( !( object_hits[i].x0 + object_hits[i].width <= img.width() &&
             object_hits[i].y0 + object_hits[i].height <= img.height() )
          ) {
         //cout << "PASSED IMAGE BOUNDS" << endl;
         object_hits[i].width = img.width() - object_hits[i].x0 - 1;
         object_hits[i].height = img.height() - object_hits[i].y0 - 1;
       }
-      filter.push_back(object_hits[i]);
+      filter.push_back(object_hits[i]);*/
+      if ( ( object_hits[i].x0 + object_hits[i].width <= img.width() &&
+            object_hits[i].y0 + object_hits[i].height <= img.height() )
+         ) {
+        filter.push_back(object_hits[i]);
+      }
     }
   }
   //cout << "DONE PRINT" << endl;
